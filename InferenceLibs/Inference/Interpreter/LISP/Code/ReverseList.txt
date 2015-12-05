@@ -1,0 +1,11 @@
+; LISP: Reverse a list - November 28, 2013
+(define reverseListHelper (src dst)
+    (if (null? src)
+        dst
+        (reverseListHelper (cdr src) (cons (car src) dst))))
+;
+(define reverseList (l) (reverseListHelper l '()))
+;
+(reverseList '(2 3 5 7))
+;
+; **** End of File ****

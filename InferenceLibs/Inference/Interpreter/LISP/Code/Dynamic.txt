@@ -1,0 +1,9 @@
+dynamic
+(define innerFunc () (set x 13))
+(define outerFunc ()
+    (let ((x 7))
+        (begin
+            (innerFunc)
+            x)))
+(outerFunc)
+static

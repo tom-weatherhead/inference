@@ -1,0 +1,7 @@
+; Multi-line brackets test for LISP; November 27, 2013
+(set x '(sin cos tan))
+(set y '(
+    sin cos tan))
+;(list
+;    (list
+;        quote)) ; When these three lines are uncommented, they generate a syntax error at a particular line number; we verify the line number, as a test.

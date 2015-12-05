@@ -1,0 +1,11 @@
+% Learn Prolog Now! Exercise 10.5 - Love and Jealousy
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse46
+loves(vincent, mia).
+loves(marsellus, mia).
+jealous(X, X) :- !, fail.
+jealous(X, Y) :- loves(X, Z), loves(Y, Z).
+% A person cannot be jealous of himself/herself:
+?- jealous(vincent, marsellus).
+?- jealous(marsellus, vincent).
+?- jealous(vincent, vincent).
+?- jealous(marsellus, marsellus).

@@ -1,0 +1,12 @@
+; Integer factorization; not really the Sieve of Eratosthenes
+loadPreset <=
+(infer (divides X 0))
+(infer (divides X Y) from (<= X Y) (minus Y X Z) (divides X Z))
+(infer (does-not-divide X Y) from (less 0 Y) (less Y X))
+(infer (does-not-divide X Y) from (less X Y) (minus Y X Z) (does-not-divide X Z))
+(infer (divide X Y 0) from (less X Y))
+(infer (divide X Y Z) from (minus X Y W) (divide W Y V) (plus V 1 Z))
+(infer (sieve 1 Y nil))
+(infer (sieve X Y (cons Y Z)) from (divides Y X) (divide X Y W) (sieve W Y Z))
+(infer (sieve X Y Z) from (does-not-divide Y X) (plus Y 1 W) (sieve X W Z))
+(infer (factorize X Y) from (sieve X 2 Y))

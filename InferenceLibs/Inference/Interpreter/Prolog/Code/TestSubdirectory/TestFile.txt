@@ -1,0 +1,2 @@
+% Subdirectory test - May 8, 2014
+subdirectoryTestSuccess.

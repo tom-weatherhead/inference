@@ -1,0 +1,12 @@
+% Learn Prolog Now! chapter 12 exercise 2 - Word histogram
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse55
+:- [ReadWords.txt].
+retractWords :- word(_, _), !, retractall(word(_, _)).
+retractWords.
+createHistogram([]).
+createHistogram([W | L]) :- retract(word(W, N)), !, M is N + 1, assertz(word(W, M)), createHistogram(L).
+createHistogram([W | L]) :- assertz(word(W, 1)), createHistogram(L).
+main2 :- retractWords, readAllWords('words.txt', L), createHistogram(L).
+% Now do something like this:
+% ?- word(this, N).
+% ?- word('is', N).

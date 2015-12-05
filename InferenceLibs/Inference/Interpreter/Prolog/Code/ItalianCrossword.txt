@@ -1,0 +1,22 @@
+% Italian crossword puzzle - March 12, 2014
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse7
+% This is a Prolog2 program.
+word(astante,  a,s,t,a,n,t,e).
+word(astoria,  a,s,t,o,r,i,a).
+word(baratto,  b,a,r,a,t,t,o).
+word(cobalto,  c,o,b,a,l,t,o).
+word(pistola,  p,i,s,t,o,l,a).
+word(statale,  s,t,a,t,a,l,e).
+member(X,[X|_]).
+member(X,[_|L]) :- member(X,L).
+unique_list([]).
+unique_list([X|L]) :- \+ member(X, L), unique_list(L).
+crossword(V1, V2, V3, H1, H2, H3) :-
+    word(V1, _, V12, _, V14, _, V16, _),
+    word(V2, _, V22, _, V24, _, V26, _),
+    word(V3, _, V32, _, V34, _, V36, _),
+    word(H1, _, V12, _, V22, _, V32, _),
+    word(H2, _, V14, _, V24, _, V34, _),
+    word(H3, _, V16, _, V26, _, V36, _),
+    unique_list([V1, V2, V3, H1, H2, H3]). % Ensure that there are no duplicates among the variable values.
+?- crossword(V1, V2, V3, H1, H2, H3), print(V1, V2, V3, H1, H2, H3).

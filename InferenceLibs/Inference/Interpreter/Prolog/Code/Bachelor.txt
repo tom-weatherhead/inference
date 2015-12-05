@@ -1,0 +1,12 @@
+% The bachelor example; used to test negation.
+% See http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/2_5.html
+% This is a Prolog2 program.
+bachelor(P) :- male(P), not(married(P)).
+male(henry).
+male(tom).
+married(tom).
+?- bachelor(henry).
+?- bachelor(tom).
+all
+?- bachelor(Who), print(Who).
+first

@@ -1,0 +1,39 @@
+; From Kamin, page 211 (not page 214)
+;
+(define not (x) (if (x) 0 1))
+(define >= (x y) (not (< x y)))
+(define sqr (x) (* x x))
+(define abs (x) (if (< x 0) (- 0 x) x))
+;
+(cluster Point
+    ; Export: new, abscissa, ordinate, reflect, rotate, compare, quadrant
+    (rep x-coord y-coord)
+    (define new (x y) (Point x y))
+    (define abscissa (p) (x-coord p))
+    (define ordinate (p) (y-coord p))
+    (define reflect (p)
+        (begin
+            (set-x-coord p (- 0 (x-coord p)))
+            (set-y-coord p (- 0 (y-coord p)))))
+    (define rotate (p)
+        (begin
+            (set temp (x-coord p))
+            (set-x-coord p (y-coord p))
+            (set-y-coord p (- 0 temp))))
+    (define compare (p1 p2) (< (sqrdist p1) (sqrdist p2)))
+    (define quadrant (p)
+        (if (>= (x-coord p) 0)
+            (if (>= (y-coord p) 0) 1 2)
+            (if (< (y-coord p) 0) 3 4)))
+    ; sqrdist is not exported
+    (define sqrdist (p) (+ (sqr (x-coord p)) (sqr (y-coord p))))
+)
+;
+(set p1 (Point$new 3 4))
+(Point$rotate p1)
+(Point$reflect p1)
+(set p2 (Point$new 1 5))
+(define enclosed-area (p1 p2) (abs (* 
+    (- (Point$abscissa p1) (Point$abscissa p2))
+    (- (Point$ordinate p1) (Point$ordinate p2)))))
+(enclosed-area p1 p2)

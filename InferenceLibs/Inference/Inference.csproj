@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5800F110-DF42-4F81-84F0-64AE8E2F73CA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Inference</RootNamespace>
+    <AssemblyName>Inference</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MySql.Data.6.8.3\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AStar\AStarAlgorithm.cs" />
+    <Compile Include="AStar\AStarBase.cs" />
+    <Compile Include="AStar\CanMiss.cs" />
+    <Compile Include="AStar\Decanter.cs" />
+    <Compile Include="AStar\EightPuzzle.cs" />
+    <Compile Include="AStar\HeuristicSearchAlgorithmBase.cs" />
+    <Compile Include="AStar\IDAStarAlgorithm.cs" />
+    <Compile Include="DAO\ClauseInDatabaseDAO.cs" />
+    <Compile Include="Domain\ClauseInDatabase.cs" />
+    <Compile Include="Domain\Predicate.cs" />
+    <Compile Include="Expert\ModifiedAStar.cs" />
+    <Compile Include="Interpreter\APL\APLGrammar.cs" />
+    <Compile Include="Interpreter\APL\APLInterpreter.cs" />
+    <Compile Include="Interpreter\APL\DomainModel.cs" />
+    <Compile Include="Interpreter\Chapter1\DomainModel.cs" />
+    <Compile Include="Interpreter\Chapter1\Grammar.cs" />
+    <Compile Include="Interpreter\CLU\CLUGrammar.cs" />
+    <Compile Include="Interpreter\CLU\CLUInterpreter.cs" />
+    <Compile Include="Interpreter\CLU\DomainModel.cs" />
+    <Compile Include="Interpreter\DomainModel.cs" />
+    <Compile Include="Interpreter\InterpreterBase.cs" />
+    <Compile Include="Interpreter\InterpreterGrammarBase.cs" />
+    <Compile Include="Interpreter\InterpreterTokenizer.cs" />
+    <Compile Include="Interpreter\JSON\DomainModel.cs" />
+    <Compile Include="Interpreter\JSON\JSONGrammar.cs" />
+    <Compile Include="Interpreter\LISP\DomainModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpreter\LISP\LISPGrammar.cs" />
+    <Compile Include="Interpreter\LISP\LISPInterpreter.cs" />
+    <Compile Include="Interpreter\Prolog\DomainModel.cs" />
+    <Compile Include="Interpreter\Prolog\PrologGrammar.cs" />
+    <Compile Include="Interpreter\Prolog\PrologGrammar2_LL1.cs" />
+    <Compile Include="Interpreter\Prolog\PrologGrammarBase.cs" />
+    <Compile Include="Interpreter\Prolog\PrologInterpreter.cs" />
+    <Compile Include="Interpreter\SASL\DomainModel.cs" />
+    <Compile Include="Interpreter\SASL\GraphReduction.cs" />
+    <Compile Include="Interpreter\SASL\SASLGrammar.cs" />
+    <Compile Include="Interpreter\SASL\SASLInterpreter.cs" />
+    <Compile Include="Interpreter\Scheme\DomainModel.cs" />
+    <Compile Include="Interpreter\Scheme\SchemeGrammar.cs" />
+    <Compile Include="Interpreter\Scheme\SchemeInterpreter.cs" />
+    <Compile Include="Interpreter\Smalltalk\DomainModel.cs" />
+    <Compile Include="Interpreter\Smalltalk\SmalltalkGrammar.cs" />
+    <Compile Include="Interpreter\Smalltalk\SmalltalkInterpreter.cs" />
+    <Compile Include="Parser\Exceptions.cs" />
+    <Compile Include="Parser\Grammar.cs" />
+    <Compile Include="Parser\LALR1Parser.cs" />
+    <Compile Include="Parser\LL1Parser.cs" />
+    <Compile Include="Parser\LR0Parser.cs" />
+    <Compile Include="Parser\LR1Parser.cs" />
+    <Compile Include="Parser\ParserBase.cs" />
+    <Compile Include="Parser\SLR1Parser.cs" />
+    <Compile Include="Parser\Tokenizer.cs" />
+    <Compile Include="Persistence\PersistenceInitializer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolution\Exceptions.cs" />
+    <Compile Include="Resolution\KnowledgeBase.cs" />
+    <Compile Include="Utilities\AVLTree.cs" />
+    <Compile Include="Utilities\BTree.cs" />
+    <Compile Include="Utilities\DictionaryTreeBase.cs" />
+    <Compile Include="Utilities\ListExtensions.cs" />
+    <Compile Include="Utilities\PriorityQueue.cs" />
+    <Compile Include="Utilities\RedBlackTree.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\ClauseInDatabase.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\NHibernateHelperLib\NHibernateHelperLib.csproj">
+      <Project>{5a047192-ecc2-4904-9d43-b20f5e21d892}</Project>
+      <Name>NHibernateHelperLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

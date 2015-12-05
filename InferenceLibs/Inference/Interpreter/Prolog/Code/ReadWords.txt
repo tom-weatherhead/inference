@@ -1,0 +1,23 @@
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse54
+
+readWord(InStream, W)  :-
+    get_code(InStream, Char),
+    checkCharAndReadRest(Char, Chars, InStream),
+    atom_codes(W, Chars).
+
+checkCharAndReadRest(10, [], _) :- !.
+checkCharAndReadRest(13, [], _) :- !.
+checkCharAndReadRest(32, [], _) :- !.
+checkCharAndReadRest(-1, [], _) :- !.
+checkCharAndReadRest(end_of_file, [], _) :- !.   
+checkCharAndReadRest(Char, [Char | Chars], InStream) :-
+    get_code(InStream, NextChar),
+    checkCharAndReadRest(NextChar, Chars, InStream). 
+
+checkChars(Str, [], L) :- !, get_code(Str, C), readAllWordsEx(Str, C, L).
+checkChars(Str, Chars, [W | L]) :- atom_codes(W, Chars), get_code(Str, C), readAllWordsEx(Str, C, L).
+readAllWordsEx(_, -1, []) :- !.
+readAllWordsEx(_, end_of_file, []) :- !.
+readAllWordsEx(Str, C, L) :- checkCharAndReadRest(C, Chars, Str), checkChars(Str, Chars, L).
+readAllWords(Filename, L) :- open(Filename, read, Str), get_code(Str, C), readAllWordsEx(Str, C, L), close(Str).
+main :- readAllWords('words.txt', L), write(L), nl.

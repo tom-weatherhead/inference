@@ -1,0 +1,12 @@
+; Prolog - Exercise 8
+(infer (to-succ-format 0 zero))
+(infer (to-succ-format M (succ X))
+    from
+	(less 0 M)
+        (minus M 1 N)
+        (to-succ-format N X))
+;
+(infer (equal zero zero))
+(infer (equal (succ X) (succ Y)) from (equal X Y))
+;
+(infer? (to-succ-format 0 X) (to-succ-format 1 Y) (equal X Y))

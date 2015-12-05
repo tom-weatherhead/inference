@@ -1,0 +1,8 @@
+# CalcPi.txt - Calculate an approximation of pi = 3.141592653589793238462643383...
+#
+(define CalcPi (n)
+    (+/ (*
+        (- (* 2 (mod (indx n) 2)) 1) # 1 -1 1 -1 ...
+        (/ 4.0 (- (* 2 (indx n)) 1)))))
+#
+# Try e.g. (CalcPi 100)

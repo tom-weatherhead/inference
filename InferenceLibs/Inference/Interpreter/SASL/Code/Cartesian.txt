@@ -1,0 +1,7 @@
+; Compute the Cartesian product of two lists
+
+(set mapcar-aux1 (lambda (f) (lambda (e1 l2) (if (null? l2) '() (cons (f e1 (car l2)) ((mapcar-aux1 f) e1 (cdr l2)))))))
+
+(set combine-aux1 (lambda (f sum zero) (lambda (l1 l2) (if (null? l1) zero (sum (f (car l1) l2) ((combine-aux1 f sum zero) (cdr l1) l2))))))
+
+(set cartesian (combine-aux1 (mapcar-aux1 list) append '()))

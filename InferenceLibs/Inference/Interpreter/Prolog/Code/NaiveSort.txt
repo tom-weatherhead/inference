@@ -1,0 +1,21 @@
+(infer (append nil L L))
+(infer (append (cons X L) M (cons X N)) from (append L M N))
+;
+(infer (<= X X))
+(infer (<= X Y) from (less X Y))
+;
+(infer (ordered nil))
+(infer (ordered (cons A nil)))
+(infer (ordered (cons A (cons B L))) from (<= A B) (ordered (cons B L)))
+;
+(infer (permutation nil nil))
+(infer (permutation L (cons H T)) from (append V (cons H U) L) (append V U W) (permutation W T))
+;
+;(infer? (permutation (cons 2 (cons 3 nil)) (cons 2 (cons 3 nil))))
+;(infer? (permutation (cons 4 (cons 2 (cons 3 nil))) (cons 2 (cons 3 (cons 4 nil)))))
+;
+(infer (naive-sort L M) from (permutation L M) (ordered M))
+;
+;(infer? (naive-sort (cons 4 (cons 2 (cons 3 nil))) L) (print L))
+;(infer? (permutation (cons 4 (cons 2 (cons 3 nil))) L) (print L))
+(infer? (naive-sort (cons 3 (cons 2 nil)) L) (print L))

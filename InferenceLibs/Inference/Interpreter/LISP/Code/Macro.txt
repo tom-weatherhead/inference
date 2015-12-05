@@ -1,0 +1,13 @@
+; A sample macro in LISP - from Kamin
+;
+(define <= (x y) (or (< x y) (= x y)))
+;
+(define-macro for (indexvar lower upper body)
+    (list 'begin
+        (list 'set indexvar lower)
+        (list 'while
+            (list '<= indexvar upper)
+            (list 'begin body
+                (list 'set indexvar (list '+ indexvar 1))))))
+;
+(for x 1 10 (print x))

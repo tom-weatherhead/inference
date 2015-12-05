@@ -1,0 +1,29 @@
+% A program that solves the N-queens problem
+% See http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/2_11.html
+% This is a Prolog2 program.
+%
+% Predicates 'perm' and 'takeout' are from section 2.7
+takeout(X,[X|R],R).
+takeout(X,[F|R],[F|S]) :- takeout(X,R,S).
+perm([X|Y],Z) :- perm(Y,W), takeout(X,Z,W).   
+perm([],[]).
+%
+member(X,[X|_]).
+member(X,[_|R]) :- member(X,R).
+%
+solve(P) :-
+     perm([1,2,3,4,5,6,7,8],P), 
+     combine([1,2,3,4,5,6,7,8],P,S,D),
+     all_diff(S),
+     all_diff(D).
+%
+combine([X1|X],[Y1|Y],[S1|S],[D1|D]) :-
+     S1 is X1 + Y1,
+     D1 is X1 - Y1,
+     combine(X,Y,S,D).
+combine([],[],[],[]).
+%
+all_diff([X|Y]) :- \+ member(X,Y), all_diff(Y).
+all_diff([X]).
+%
+?- solve(P), print(P).

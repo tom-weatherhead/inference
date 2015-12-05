@@ -1,0 +1,5 @@
+; Stack trace test in LISP - December 10, 2013
+debug on
+(define StackTrace () __STACK_TRACE__)
+(define foo (l) (if (null? l) (StackTrace) (cons (car l) (foo (cdr l)))))
+(foo '(1 2 3))

@@ -1,0 +1,29 @@
+% DFA (Deterministic Finite Automaton) Parser
+% See http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/2_14.html
+% This is a Prolog2 program.
+parse(L) :- start(S), 
+            trans(S,L).
+trans(X,[A|B]) :- 
+      delta(X,A,Y),   % X ---A---> Y
+      write(X),
+      write('  '),
+      write([A|B]),
+      nl,
+      trans(Y,B).  
+trans(X,[]) :- 
+      final(X),
+      write(X),
+      write('  '),
+      write([]), nl.
+% As an example, the following Prolog code specifies a state table for a DFA that accepts the language (a,b)*ab(a,b)* .
+delta(0,a,1).   
+delta(0,b,0).
+delta(1,a,1).
+delta(1,b,2).
+delta(2,a,2).
+delta(2,b,2).
+start(0).
+final(2).
+%
+?- parse([b,b,a,a,b,a,b]).
+?- parse([b,b,a]).

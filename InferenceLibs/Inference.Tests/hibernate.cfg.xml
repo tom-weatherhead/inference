@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- hibernate.cfg.xml for assembly Inference.Tests.dll -->
+
+<hibernate-configuration xmlns="urn:nhibernate-configuration-2.2">
+  <session-factory>
+    <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
+    <property name="dialect">NHibernate.Dialect.MySQLDialect</property>
+    <property name="connection.driver_class">NHibernate.Driver.MySqlDataDriver</property>
+    <property name="connection.connection_string">Database=inference_test;Data Source=localhost;User Id=user;Password=tomtom7</property>
+    <!-- <property name="use_proxy_validator">true</property> --> <!-- TODO: Remove this? -->
+    <property name="adonet.batch_size">16</property>
+    <property name="generate_statistics">true</property>
+    <!-- <property name="current_session_context_class">web</property> -->
+
+    <property name="show_sql">true</property>
+  </session-factory>
+</hibernate-configuration>

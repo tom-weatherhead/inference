@@ -1,0 +1,9 @@
+% Perm3.txt - All permutations of a list of three elements
+% This is a Prolog2 program.
+append(nil, L, L).
+append(cons(X, L), M, cons(X, N)) :- append(L, M, N).
+permutation(nil, nil).
+permutation(L, cons(H, T)) :- append(V, cons(H, U), L), append(V, U, W), permutation(W, T).
+all
+?- permutation(cons(2, cons(3, cons(5, nil))), L), print(L).
+first

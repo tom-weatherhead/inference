@@ -1,0 +1,5 @@
+(infer (append nil L L))
+; (infer (append L nil L))
+(infer (append (cons X L) M (cons X N)) from (append L M N))
+; (infer? (append (cons 1 nil) nil L) (print L))
+(infer? (append (cons 1 nil) (cons 2 nil) L) (print L))

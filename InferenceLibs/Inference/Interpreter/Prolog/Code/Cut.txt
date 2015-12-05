@@ -1,0 +1,5 @@
+(infer (eq X X))
+(infer (not-eq X Y) from (eq X Y) ! fail)
+(infer (not-eq X Y))
+;(infer? (not-eq 1 2))
+(infer? (not-eq 2 2))

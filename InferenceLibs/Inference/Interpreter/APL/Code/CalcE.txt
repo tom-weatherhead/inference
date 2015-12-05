@@ -1,0 +1,16 @@
+# CalcE.txt - Calculate an approximation of e = 2.718281828459045...
+#
+loadPreset <=
+#
+(define 1-to-n-matrix (n) (restruct (cat n n) (indx n)))
+#
+(define lower-triangular-logical (n)
+    (let ((m (1-to-n-matrix n)))
+        (<= m (trans m))))
+#
+(define lower-triangular-1-to-n (n) (* (1-to-n-matrix n) (lower-triangular-logical n)))
+#
+(define CalcE (n)
+    (+ 1 (+/ (/ 1.0 (*/ (max 1 (lower-triangular-1-to-n n)))))))
+#
+# Try e.g. (CalcE 10)

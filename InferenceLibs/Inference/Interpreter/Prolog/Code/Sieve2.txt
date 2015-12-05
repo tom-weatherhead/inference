@@ -1,0 +1,25 @@
+; Integer factorization; a true implementation of the Sieve of Eratosthenes
+; During testing, this algorithm factorized 375, but an attempt upon 400 led to a stack overflow.
+loadPreset <=
+loadPreset addtoend
+(infer (divides X 0))
+(infer (divides X Y) from (<= X Y) (minus Y X Z) (divides X Z))
+(infer (does-not-divide X Y) from (less 0 Y) (less Y X))
+(infer (does-not-divide X Y) from (less X Y) (minus Y X Z) (does-not-divide X Z))
+(infer (sieve-divides (cons Y Z) X) from (divides Y X))
+(infer (sieve-divides (cons Y Z) X) from (sieve-divides Z X))
+(infer (sieve-does-not-divide nil X))
+(infer (sieve-does-not-divide (cons Y Z) X) from (does-not-divide Y X) (sieve-does-not-divide Z X))
+(infer (mult 0 Y 0))
+(infer (mult X Y Z) from (less 0 X) (minus X 1 V) (mult V Y W) (plus W Y Z)) ; The less is necessary
+; This version of "divide" is satisfied only if X is a multiple of Y.
+(infer (divide 0 Y 0))
+(infer (divide X Y Z) from (<= Y X) (minus X Y W) (divide W Y V) (plus V 1 Z))
+(infer (build-sieve X N S S) from (mult N N M) (less X M)) ; The sieve is complete if N > sqrt(X)
+(infer (build-sieve X N SIn SOut) from (sieve-divides SIn N) (plus N 2 M) (build-sieve X M SIn SOut))
+(infer (build-sieve X N SIn SOut) from (sieve-does-not-divide SIn N) (addtoend SIn N S) (plus N 2 M) (build-sieve X M S SOut))
+(infer (sieve 1 S nil))
+(infer (sieve X nil (cons X nil)))
+(infer (sieve X (cons SH ST) (cons SH Y)) from (divide X SH Z) (sieve Z (cons SH ST) Y))
+(infer (sieve X (cons SH ST) Y) from (does-not-divide SH X) (sieve X ST Y))
+(infer (factorize X Y) from (build-sieve X 3 (cons 2 nil) S) (sieve X S Y))

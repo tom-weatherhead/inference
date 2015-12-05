@@ -1,0 +1,16 @@
+(infer (append nil L L))
+(infer (append (cons X L) M (cons X N)) from (append L M N))
+;
+(infer (<= X X))
+(infer (<= X Y) from (less X Y))
+;
+(infer (partition H (cons A X) (cons A Y) Z) from (<= A H) (partition H X Y Z))
+(infer (partition H (cons A X) Y (cons A Z)) from (less H A) (partition H X Y Z))
+(infer (partition H nil nil nil))
+;
+(infer (quicksort nil nil))
+(infer (quicksort (cons H T) S) from (partition H T A B) (quicksort A A1) (quicksort B B1) (append A1 (cons H B1) S))
+;
+(infer? (quicksort (cons 2 (cons 3 (cons 1 nil))) S) (print S))		; Succeeds
+;(infer? (quicksort S (cons 2 (cons 3 (cons 1 nil)))) (print S))	; Infinite loop:
+; (partition H T A B) loops infinitely if H, T, A, and B are all variables.

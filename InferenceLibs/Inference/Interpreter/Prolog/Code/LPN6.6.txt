@@ -1,0 +1,28 @@
+% Learn Prolog Now! Exercise 6.6 - A logic puzzle - March 28, 2014
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse26
+%
+% The street is a list of three houses.
+% A house is a list: [colour, nationality, pet]
+loadPreset member
+loadPreset append
+prefix(P,L) :- append(P,_,L).
+suffix(S,L) :- append(_,S,L).
+sublist(SubL,L) :- suffix(S,L), prefix(SubL,S).
+Permutation([], []).
+Permutation(L, [H|T]) :- append(V, [H|U], L), append(V, U, W), Permutation(W, T).
+Foo1(C,N,P) :-
+  Permutation([red, green, blue], C),
+  Permutation([englishman, spaniard, japanese], N),
+  Permutation([jaguar, snail, zebra], P).
+Transform([],[],[],[]).
+Transform([CH|CT],[NH|NT],[PH|PT],[[CH,NH,PH]|ST]) :- Transform(CT,NT,PT,ST).
+Constraint1(L) :- member([red,englishman,_],L).
+Constraint2(L) :- member([_,spaniard,jaguar],L).
+Constraints3And4(L) :- sublist([[_,_,snail],[blue,japanese,_]],L).
+zebra(N) :-
+  Foo1(CL,NL,PL),
+  Transform(CL,NL,PL,Street),
+  Constraint1(Street),
+  Constraint2(Street),
+  Constraints3And4(Street),
+  member([_, N, zebra], Street).

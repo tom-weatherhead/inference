@@ -1,0 +1,31 @@
+% Learn Prolog Now! Exercise 10.4 - Train routes
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse46
+% Forward:
+directTrain(saarbruecken, dudweiler).
+directTrain(forbach, saarbruecken).
+directTrain(freyming, forbach).
+directTrain(stAvold, freyming).
+directTrain(fahlquemont, stAvold).
+directTrain(metz, fahlquemont).
+directTrain(nancy, metz).
+% Back:
+directTrain(dudweiler, saarbruecken).
+directTrain(saarbruecken, forbach).
+directTrain(forbach, freyming).
+directTrain(freyming, stAvold).
+directTrain(stAvold, fahlquemont).
+directTrain(fahlquemont, metz).
+directTrain(metz, nancy).
+%
+% Attempt 1: Infinite loop:
+%route(X, Y, [X, Y]) :- directTrain(X, Y).
+%route(X, Y, [X | T]) :- directTrain(X, Z), route(Z, Y, T), \+ member(X, T).
+%
+% Attempt 2: This works.  Use an accumulator:
+loadPreset member
+loadPreset append
+routeAcc(X, X, Acc, Acc).
+routeAcc(X, Y, Acc, Result) :- directTrain(X, Z), \+ member(Z, Acc), append(Acc, [Z], W), routeAcc(Z, Y, W, Result).
+route(X, Y, L) :- routeAcc(X, Y, [X], L).
+%
+?- route(forbach, metz, Route).

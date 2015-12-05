@@ -1,0 +1,10 @@
+% Perm3b.txt - All permutations of a list of three elements, using actual Prolog list syntax
+% This is a Prolog2 program.
+append([], L, L).
+append([X|L], M, [X|N]) :- append(L, M, N).
+permutation([], []).
+permutation(L, [H|T]) :- append(V, [H|U], L), append(V, U, W), permutation(W, T).
+all
+?- append(X, Y, [2, 3, 5]), print(X, Y).
+?- permutation([2, 3, 5], L), print(L).
+first

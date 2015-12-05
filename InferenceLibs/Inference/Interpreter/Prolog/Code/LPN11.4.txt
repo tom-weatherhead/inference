@@ -1,0 +1,18 @@
+% Learn Prolog Now! section 11.4 (practical session) - April 15, 2014
+loadPreset member
+loadPreset rev
+% isSet/1 : A set contains no duplicate elements.
+isSet([]).
+isSet([H | T]) :- \+ member(H, T), isSet(T).
+% subsetHelper/2 : For the case where both arguments to subset/2 are defined (and are ground expressions).
+% Element order doesn't matter: E.g. subset([c, a], [a, b, c]) is satisfied.
+subsetHelper([], _).
+subsetHelper([H | T], S) :- member(H, S), subsetHelper(T, S).
+subset(SS, S) :- isSet(SS), isSet(S), subsetHelper(SS, S).
+% subsetSAR : Source, Accumulator, Result.  Generate all subsets whose elements are in the same order as they are in in the parent set.
+subsetSAR([], Acc, Acc).
+subsetSAR([H | T], Acc, Result) :- subsetSAR(T, Acc, Result).
+subsetSAR([H | T], Acc, Result) :- subsetSAR(T, [H | Acc], Result).
+% SS \== [] : Otherwise, [] would be generated as a result twice (the first time via isSet([])).
+subset(SS, S) :- isSet(S), rev(S, SRev), subsetSAR(SRev, [], SS), SS \== [].
+powerset(S, P) :- isSet(S), findall(SS, subset(SS, S), P).

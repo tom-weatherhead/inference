@@ -1,0 +1,43 @@
+% Graph structures and paths
+% See http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/2_15.html
+% This is a Prolog2 program.
+edge(1,2).
+edge(1,4).
+edge(1,3).
+edge(2,3).
+edge(2,5).
+edge(3,4).
+edge(3,5).
+edge(4,5).
+%
+%connected(X,Y) :- edge(X,Y) ; edge(Y,X).
+% The two-clause definition of "connected" reveals a bug;
+% it suppresses some paths, as if the second clause isn't working.
+% The interpreter thinks that the second clause is isomorphic to the first, which is not true.
+% Solution: Before unifying two clauses, ensure that they contain no variables in common.
+connected(X,Y) :- edge(X,Y).
+connected(X,Y) :- edge(Y,X).
+%
+% "member" and "reverse" are from section 2.7.
+member(X, [X|_]).
+member(X, [_|L]) :- member(X, L).
+%
+reverse([X|Y],Z,W) :- reverse(Y,[X|Z],W).
+reverse([],X,X).
+reverse(A,R) :- reverse(A,[],R).
+%
+travel(A,B,P,[B|P]) :- 
+       connected(A,B).
+travel(A,B,Visited,Path) :-
+       connected(A,C),           
+       C \== B,
+       \+ member(C,Visited),
+       travel(C,B,[C|Visited],Path).
+%
+path(A,B,Path) :-
+       travel(A,B,[A],Q), 
+       reverse(Q,Path).
+%
+all
+?- path(1, 5, P), print(P).
+first

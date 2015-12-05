@@ -1,0 +1,14 @@
+; The three-colour problem - From Kamin, page 353
+(infer (different yellow blue))
+(infer (different yellow red))
+(infer (different blue yellow))
+(infer (different blue red))
+(infer (different red yellow))
+(infer (different red blue))
+;
+(infer (mapb-colouring A B C D E F)
+    from (different A B) (different A C) (different A D) (different A F)
+         (different B C) (different B E) (different C E) (different C D)
+         (different D E) (different E F))
+;
+; (infer? (mapb-colouring A B C D E F) (print A B C D E F))

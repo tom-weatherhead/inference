@@ -1,0 +1,68 @@
+; A Sieve of Eratosthenes that reuses its list of prime numbers - January 4, 2014
+(set fact
+	(letrec ; Actually, nothing here is recursive yet.
+		(
+			(primes '(2))
+			(next-prime 3)
+			(is-prime (lambda (n)
+				(call/cc (lambda (exit)
+					(begin
+						(mapcar (lambda (p)
+							(cond
+								((< n (* p p)) (exit 'T))
+								((= 0 (mod n p)) (exit '()))
+								('T '())
+							)
+						) primes)
+						'T
+					)
+				))
+			))
+			(f (lambda (n)
+				(let
+					(
+						(primes2 '())
+						(p 0)
+						(result '())
+					)
+					(begin
+						(set primes2 primes)
+						(set old-primes2-empty '())
+						(set result '())
+						(call/cc (lambda (exit)
+							(while 'T
+								(begin
+									(if (null? primes2)
+										(begin
+											(set p next-prime)
+											(set next-prime (+ next-prime 2))
+											(while (not (is-prime p))
+												(begin
+													(set p next-prime)
+													(set next-prime (+ next-prime 2))
+												)
+											)
+											(set primes (append primes (list p)))
+										)
+										(begin
+											(set p (car primes2))
+											(set primes2 (cdr primes2))
+										)
+									)
+									(if (= n 1) (exit result) '())
+									(while (= 0 (mod n p))
+										(begin
+											(set result (append result (list p)))
+											(set n (/ n p))
+										)
+									)
+								)
+							)
+						))
+					)
+				)
+			))
+		)
+		f
+	)
+)

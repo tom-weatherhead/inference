@@ -1,0 +1,11 @@
+% Learn Prolog Now! Exercise 11.3 - April 15, 2014
+% sigma(X, Y) is true iff Y is the sum of the integers from 1 to X inclusive.
+sigmaHelper(0, 0) :- !.
+sigmaHelper(X, Y) :- sigmares(X, Y), !.
+sigmaHelper(X, Y) :- X > 0, M is X - 1, sigmaHelper(M, N), Y is N + X.
+sigma(X, Y) :- sigmares(X, Y), !. % This prevents repeated asserts of the same values.
+sigma(X, Y) :- sigmaHelper(X, Y), assertz(sigmares(X, Y)), !.
+% Handle the case where sigma's first argument is a variable:
+sigmaRev(X, X, X).
+sigmaRev(N, Sum, Result) :- N < Sum, N2 is N + 1, Sum2 is Sum - N, sigmaRev(N2, Sum2, Result).
+sigma(X, Y) :- sigmaRev(0, Y, X), assertz(sigmares(X, Y)).

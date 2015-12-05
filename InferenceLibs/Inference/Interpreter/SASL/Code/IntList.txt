@@ -1,0 +1,5 @@
+; SASL interpreter file load test 1 : An infinite list of integers
+
+(set ints-from (lambda (i) (cons i (ints-from (+1 i)))))
+
+(set ints (ints-from 0))

@@ -1,0 +1,8 @@
+; Stack trace test in Scheme - December 10, 2013
+debug on
+(set StackTrace (lambda () __STACK_TRACE__))
+(set combine2 (lambda (f sum) (letrec ((loop (lambda (l) (if (null? l) (StackTrace) (sum (f (car l)) (loop (cdr l))))))) loop)))
+(set foo (combine2 id cons))
+(set result (foo '(1 2 3)))
+(force result)
+result

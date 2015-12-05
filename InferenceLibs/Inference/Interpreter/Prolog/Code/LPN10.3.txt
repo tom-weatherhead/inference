@@ -1,0 +1,15 @@
+% Learn Prolog Now! Exercise 10.3 - Split a list of integers into a non-negative list and a negative list
+% See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse46
+loadPreset append
+splitAcc([], P, N, P, N).
+%
+% Without any cuts:
+% splitAcc([H | T], P, N, PF, NF) :- H >= 0, append(P, [H], P2), splitAcc(T, P2, N, PF, NF).
+% splitAcc([H | T], P, N, PF, NF) :- H < 0, append(N, [H], N2), splitAcc(T, P, N2, PF, NF).
+%
+% With a cut:
+splitAcc([H | T], P, N, PF, NF) :- H >= 0, !, append(P, [H], P2), splitAcc(T, P2, N, PF, NF).
+splitAcc([H | T], P, N, PF, NF) :- append(N, [H], N2), splitAcc(T, P, N2, PF, NF).
+split(L, PF, NF) :- splitAcc(L, [], [], PF, NF).
+all
+?- split([3, 4, -5, -1, 0, 4, -9], P, N).

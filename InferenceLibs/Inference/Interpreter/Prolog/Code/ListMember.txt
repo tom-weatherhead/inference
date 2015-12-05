@@ -1,0 +1,4 @@
+(infer (member X (cons X L)))
+(infer (member X (cons Y M)) from (member X M))
+; (infer? (member 3 (cons 2 (cons 3 nil))))
+(infer? (member 3 (cons 2 (cons 4 nil))))

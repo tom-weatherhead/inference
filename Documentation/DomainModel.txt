@@ -1,0 +1,54 @@
+Domain Model for the "Inference" Project (a data-driven inference engine based on the resolution algorithm)
+
+- Every expression class should implement a ContainsGuid() function to test the expression graph for cycles
+
+- Grammar attempt #1:
+  - ExpressionList := Expression [, Expression]*
+  - Expression := Variable | Constant | Function | BooleanExpression
+  - Variable := [?] [A-Za-z] [A-Za-z0-9_]* e.g. "?x"
+  - Constant := [A-Za-z] [A-Za-z0-9_]*
+  - Function := FunctionName(ExpressionList)
+  - BooleanExpression := BooleanFunction | Negation | Conjunction | Disjunction
+  - BooleanFunction := FunctionName(ExpressionList)
+  - Negation := ! BooleanExpression
+  - Conjunction := BooleanExpression [&& BooleanExpression]*
+  - Disjunction := BooleanExpression [|| BooleanExpression]*
+
+- Every BooleanExpression class should implement a Negate() function and a DeMorganize() function:
+  - Negate(Negate(expr)) == expr
+  - ! (A && B) == !A || !B
+  - ! (A || B) == !A && !B
+
+- Grammar attempt #2:
+  - SystemGoal := Disjunction EOF
+  - Disjunction := Term DisjunctionTail
+  - DisjunctionTail := || Term DisjunctionTail
+  - DisjunctionTail := Lambda
+  - Term := Predicate
+  - Term := ! Predicate
+  - Predicate := Identifier ( ArgumentList )
+  - ArgumentList := Argument ArgumentTail
+  - ArgumentTail := , Argument ArgumentTail
+  - ArgumentTail := Lambda
+  - Argument := Identifier 
+  - Argument := Variable
+
+- Grammar attempt #3:
+  - SystemGoal := BoolExpr EOF
+  - BoolExpr := BoolAtom BoolExprTail
+  - BoolExprTail := && BoolAtom BoolExprTail
+  - BoolExprTail := || BoolAtom BoolExprTail
+  - BoolExprTail := -> BoolAtom
+  - BoolExprTail := Lambda
+  - BoolAtom := ( BoolExpr )
+  - BoolAtom := ! BoolAtom
+  - BoolAtom := ForAll Variable BoolExpr
+  - BoolAtom := Exists Variable BoolExpr
+  - BoolAtom := BoolIdentifier ( ArgumentList )
+  - ArgumentList := Argument ArgumentTail
+  - ArgumentTail := , Argument ArgumentTail
+  - ArgumentTail := Lambda
+  - Argument := Variable
+  - Argument := Identifier ArgIdentTail
+  - ArgIdentTail := ( ArgumentList )
+  - ArgIdentTail := Lambda

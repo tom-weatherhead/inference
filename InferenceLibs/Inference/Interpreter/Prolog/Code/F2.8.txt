@@ -1,0 +1,19 @@
+% Change for a dollar
+% See http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/2_8.html
+% This is a Prolog2 program
+member(X,[X|_]).
+member(X,[_|L]) :- member(X,L).
+change([H,Q,D,N,P]) :- 
+    member(H,[0,1,2]),                      	% Half-dollars
+    member(Q,[0,1,2,3,4]),                  	% quarters
+    member(D,[0,1,2,3,4,5,6,7,8,9,10]) ,    	% dimes
+    member(N,[0,1,2,3,4,5,6,7,8,9,10,       	% nickels
+               11,12,13,14,15,16,17,18,19,20]),  
+    S is 50 * H + 25 * Q + 10 * D + 5 * N, 
+    S <= 100, 
+    P is 100 - S.
+all
+?- change([H,Q,D,N,P]), print(H,Q,D,N,P).
+first
+?- change([0,2,3,4,6]).
+?- change([0,2,3,2,P]), print(P).
