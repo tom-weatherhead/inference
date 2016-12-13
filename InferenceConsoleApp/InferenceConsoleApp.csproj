@@ -50,17 +50,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\NHibernateHelperLib\NHibernateHelperLib.csproj">
-      <Project>{5a047192-ecc2-4904-9d43-b20f5e21d892}</Project>
-      <Name>NHibernateHelperLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\InferenceLibs\Inference\Inference.csproj">
       <Project>{5800F110-DF42-4F81-84F0-64AE8E2F73CA}</Project>
       <Name>Inference</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <ProjectReference Include="..\NHibernateHelperLib\NHibernateHelperLib.csproj">
+      <Project>{5a047192-ecc2-4904-9d43-b20f5e21d892}</Project>
+      <Name>NHibernateHelperLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="hibernate.cfg.xml">
