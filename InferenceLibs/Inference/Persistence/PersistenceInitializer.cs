@@ -3,7 +3,7 @@ using System.Collections.Generic;
 //using System.Linq;
 using System.Reflection;
 //using System.Text;
-using NHibernateHelperLib.Persistence;
+//using NHibernateHelperLib.Persistence;
 
 namespace Inference.Persistence
 {
@@ -12,9 +12,11 @@ namespace Inference.Persistence
         //static PersistenceInitializer()
         public static void Init()
         {
+            /*
             var assemblyList = new List<Assembly>() { typeof(Inference.Domain.Clause).Assembly };
 
             NHibernateHelper.Initialize(assemblyList);
+             */
         }
     }
 }

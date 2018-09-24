@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHibernateHelperLib.Persistence;
+//using NHibernateHelperLib.Persistence;
 using Inference.DAO;
 using Inference.Domain;
 using Inference.Parser;
@@ -33,15 +33,14 @@ namespace Inference.Resolution
         {
             Clear();
 
+            /*
             var dao = new ClauseInDatabaseDAO();
             var dbRecords = dao.FindAll();
 
-            /*
             if (dbRecords.Count == 0)
             {
                 throw new Exception("KnowledgeBase.Load() : There are no clauses in the database.");
             }
-             */
 
             foreach (var record in dbRecords)
             {
@@ -67,6 +66,7 @@ namespace Inference.Resolution
 
                 ClauseDict[record.Id] = clauses[0];
             }
+             */
         }
 
         public void SaveAllUnsavedClauses()
@@ -93,8 +93,8 @@ namespace Inference.Resolution
 
             clausesNotSavedToDatabase.Clear();
 
-            NHibernateHelper.CommitTransaction();
-            NHibernateHelper.CloseSession();
+            //NHibernateHelper.CommitTransaction();
+            //NHibernateHelper.CloseSession();
         }
 
         public bool ContainsEquivalent(IEnumerable<Clause> collection, Clause clause)
@@ -276,8 +276,8 @@ namespace Inference.Resolution
                 ClauseDict[record.Id] = newClause;
                 numClausesMadePersistent = ResolveClause(newClause, true) + 1;
 
-                NHibernateHelper.CommitTransaction();
-                NHibernateHelper.CloseSession();
+                //NHibernateHelper.CommitTransaction();
+                //NHibernateHelper.CloseSession();
             }
 
             return numClausesMadePersistent;

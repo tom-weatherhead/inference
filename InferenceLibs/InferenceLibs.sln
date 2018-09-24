@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inference", "Inference\Inference.csproj", "{5800F110-DF42-4F81-84F0-64AE8E2F73CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inference.Tests", "Inference.Tests\Inference.Tests.csproj", "{B15A30C2-CD4C-440F-925E-84EA95EA5CAB}"
@@ -8,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InferenceConsoleApp", "..\InferenceConsoleApp\InferenceConsoleApp.csproj", "{42497DC2-F051-45C0-95B5-0C927E09DD11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFInference", "..\WPFInference\WPFInference.csproj", "{B04D168B-6EBE-4572-B372-1FF5E533AF91}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernateHelperLib", "..\..\..\Libraries\NHibernateHelperLib\NHibernateHelperLib.csproj", "{5A047192-ECC2-4904-9D43-B20F5E21D892}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inference.MSTests", "Inference.MSTests\Inference.MSTests.csproj", "{117053EF-A816-4624-AD25-786DABA5D672}"
 EndProject
@@ -63,16 +63,6 @@ Global
 		{B04D168B-6EBE-4572-B372-1FF5E533AF91}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B04D168B-6EBE-4572-B372-1FF5E533AF91}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B04D168B-6EBE-4572-B372-1FF5E533AF91}.Release|x86.ActiveCfg = Release|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{5A047192-ECC2-4904-9D43-B20F5E21D892}.Release|x86.ActiveCfg = Release|Any CPU
 		{117053EF-A816-4624-AD25-786DABA5D672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{117053EF-A816-4624-AD25-786DABA5D672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{117053EF-A816-4624-AD25-786DABA5D672}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -86,5 +76,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB933E30-D1F5-4FDA-BCC9-B16190C69F11}
 	EndGlobalSection
 EndGlobal

@@ -9,10 +9,12 @@ namespace Inference.Tests.Utility
     [TestFixture /*, Explicit */ ]
     public class TestDataFixture : TestFixtureWithSampleDataBase
     {
+        /*
         [Test]
         public void CanInitDataWithoutProblems()
         {
             InitData();
         }
+         */
     }
 }

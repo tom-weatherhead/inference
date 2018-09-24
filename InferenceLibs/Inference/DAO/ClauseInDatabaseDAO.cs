@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-using NHibernateHelperLib.DAO;
+//using NHibernateHelperLib.DAO;
 using Inference.Domain;
 
 namespace Inference.DAO
 {
-    public class ClauseInDatabaseDAO : DAO<ClauseInDatabase>
+    public class ClauseInDatabaseDAO //: DAO<ClauseInDatabase>
     {
         public ClauseInDatabaseDAO()
             //: base()
         {
         }
 
-        public override void MakePersistent(ClauseInDatabase clause)
+        public /* override */ void MakePersistent(ClauseInDatabase clause)
         {
             clause.Validate();  // Throw an appropriate exception if the ClauseInDatabase object is not valid.
-            base.MakePersistent(clause);
+            //base.MakePersistent(clause);
         }
 
         /*

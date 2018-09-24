@@ -34,6 +34,7 @@ namespace Inference.Tests.Interpreter.Prolog
             interpreter.ReadLineForTest("clear");
         }
 
+        /*
         [Test]
         public void EnglishDCGTest() // Test our Definite Clause Grammar of a subset of the English language.
         {
@@ -125,5 +126,6 @@ namespace Inference.Tests.Interpreter.Prolog
 
             Assert.AreEqual(satisfied, interpreter.ReadLineForTest("?- subdirectoryTestSuccess."));
         }
+         */
     }
 }

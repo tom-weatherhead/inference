@@ -45,10 +45,12 @@ namespace Inference.Tests.Interpreter.LISP
                 "sin cos tan))" }));
         }
 
+        /*
         [Test]
         public void LoadFileTest()
         {
             Assert.AreEqual("(7 5 3 2)", LoadFile("ReverseList.txt"));
         }
+         */
     }
 }

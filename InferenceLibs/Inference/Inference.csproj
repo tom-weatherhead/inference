@@ -116,12 +116,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\NHibernateHelperLib\NHibernateHelperLib.csproj">
-      <Project>{5a047192-ecc2-4904-9d43-b20f5e21d892}</Project>
-      <Name>NHibernateHelperLib</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

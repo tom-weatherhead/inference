@@ -40,6 +40,7 @@ namespace Inference.Tests.Resolution
             return clauses[0];
         }
 
+        /*
         [Test]
         public void LoadTest()
         {
@@ -128,5 +129,6 @@ namespace Inference.Tests.Resolution
 
             Assert.IsTrue(knowledgeBase.ContainsEquivalent(StringToClause("@isGrandparentOf(a, c)")));
         }
+         */
     }
 }

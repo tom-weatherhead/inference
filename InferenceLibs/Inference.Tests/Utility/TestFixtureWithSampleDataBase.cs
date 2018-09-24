@@ -60,6 +60,7 @@ namespace Inference.Tests.Utility
              */
 
             // Testing: Reading
+            /*
             var dao2 = new ClauseInDatabaseDAO();
             var dbRecords = dao2.FindAll();
 
@@ -67,6 +68,7 @@ namespace Inference.Tests.Utility
             {
                 throw new Exception("TestFixtureWithSampleDataBase.InitData() : There are no clauses in the database.");
             }
+             */
 
             // No need to dispose of the transaction, since we didn't write to the database.
             //NHibernateHelper.CommitTransaction();

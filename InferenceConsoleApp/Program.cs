@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHibernateHelperLib.Persistence;
+//using NHibernateHelperLib.Persistence;
 using Inference.AStar;
 using Inference.Domain;
 using Inference.Expert;
@@ -372,6 +372,7 @@ namespace InferenceConsoleApp
 
                     switch (args[0].ToLower())
                     {
+                        /*
                         case "create":
                             Console.WriteLine("Creating database...");
                             NHibernateHelper.CreateDatabase();
@@ -389,6 +390,7 @@ namespace InferenceConsoleApp
                             NHibernateHelper.UpdateDatabase();
                             Console.WriteLine("Database updated.");
                             break;
+                         */
 
                         // TODO 2013/10/18 : Pass quiet to each interpreter constructor.
                         case "lisp":

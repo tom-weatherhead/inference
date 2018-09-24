@@ -3,7 +3,7 @@ using System;
 //using SchemaExport = NHibernate.Tool.hbm2ddl.SchemaExport;
 //using NHibernateHelper = NHibernateInAction.CaveatEmptor.Persistence.NHibernateHelper;
 //using Iesi.Collections.Generic;
-using NHibernateHelperLib.Persistence;
+//using NHibernateHelperLib.Persistence;
 //using Inference.Persistence;
 
 namespace Inference.Tests.Utility
@@ -22,7 +22,7 @@ namespace Inference.Tests.Utility
             //ddlExport.Create(false, true);
             ddlExport.Create(true, true);
              */
-            NHibernateHelper.CreateDatabase();
+            //NHibernateHelper.CreateDatabase();
         }
 
         protected void DropDatabase()
@@ -38,7 +38,7 @@ namespace Inference.Tests.Utility
             //ddlExport.Drop(false, true);
             ddlExport.Drop(true, true);
              */
-            NHibernateHelper.DropDatabase();
+            //NHibernateHelper.DropDatabase();
         }
     }
 }
