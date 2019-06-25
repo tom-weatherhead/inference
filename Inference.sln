@@ -1,0 +1,29 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InferenceConsoleApp", "InferenceConsoleApp\InferenceConsoleApp.csproj", "{E381BCB4-AAE2-46B8-825D-ED1D70507AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inference", "InferenceLibs\Inference\Inference.csproj", "{866652BF-E0EB-4B2E-890A-A25D7723C7FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inference.Tests", "InferenceLibs\Inference.Tests\Inference.Tests.csproj", "{C31F082E-545F-4759-BB12-17079A031458}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E381BCB4-AAE2-46B8-825D-ED1D70507AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E381BCB4-AAE2-46B8-825D-ED1D70507AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E381BCB4-AAE2-46B8-825D-ED1D70507AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E381BCB4-AAE2-46B8-825D-ED1D70507AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866652BF-E0EB-4B2E-890A-A25D7723C7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866652BF-E0EB-4B2E-890A-A25D7723C7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866652BF-E0EB-4B2E-890A-A25D7723C7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866652BF-E0EB-4B2E-890A-A25D7723C7FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C31F082E-545F-4759-BB12-17079A031458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C31F082E-545F-4759-BB12-17079A031458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C31F082E-545F-4759-BB12-17079A031458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C31F082E-545F-4759-BB12-17079A031458}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

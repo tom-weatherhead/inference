@@ -266,15 +266,15 @@ namespace Inference.Interpreter.Prolog
                     innerGoal = (PrologGoal)semanticStack.Pop();
                     //str = (string)semanticStack.Pop();
                     pred = new PrologPredicate("not");
-                    semanticStack.Push(new PrologGoalWithInner<PrologGoal>(gs, pred, innerGoal));
+                    // semanticStack.Push(new PrologGoalWithInner<PrologGoal>(gs, pred, innerGoal)); // ThAW 2019-06-24 : To get it to build on .NET Core on macOS.
                     break;
 
                 case "#metaPredicateWithClause":
                     innerClause = (PrologClause)semanticStack.Pop();
                     str = (string)semanticStack.Pop();
                     pred = new PrologPredicate(str);
-                    semanticStack.Push(new PrologGoalWithInner<PrologClause>(gs, pred, innerClause));
-                    break;
+					//semanticStack.Push(new PrologGoalWithInner<PrologClause>(gs, pred, innerClause)); // ThAW 2019-06-24 : To get it to build on .NET Core on macOS.
+					break;
 
                 case "#nil":
                     functor = new PrologFunctor("nil");
@@ -309,8 +309,8 @@ namespace Inference.Interpreter.Prolog
 
                     goal2 = (PrologGoal)obj;
                     goal = (PrologGoal)semanticStack.Pop();
-                    semanticStack.Push(new PrologGoalDisjunction(gs, goal, goal2));
-                    break;
+                    //semanticStack.Push(new PrologGoalDisjunction(gs, goal, goal2)); // ThAW 2019-06-24 : To get it to build on .NET Core on macOS.
+					break;
 
                 case "#goalDisjunction2":
                     ExecuteSemanticAction(semanticStack, "#goalDisjunction");
@@ -321,8 +321,8 @@ namespace Inference.Interpreter.Prolog
                     goal3 = (PrologGoal)semanticStack.Pop();
                     goal2 = (PrologGoal)semanticStack.Pop();
                     goal = (PrologGoal)semanticStack.Pop();
-                    semanticStack.Push(new PrologGoalIfThenElse(gs, goal, goal2, goal3));
-                    break;
+                    //semanticStack.Push(new PrologGoalIfThenElse(gs, goal, goal2, goal3)); // ThAW 2019-06-24 : To get it to build on .NET Core on macOS.
+					break;
 
                 case "#=":
                     expr2 = (IPrologExpression)semanticStack.Pop();

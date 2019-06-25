@@ -13,7 +13,9 @@ namespace Inference.Tests.Interpreter.APL
     [TestFixture]
     public class Parser_Fixture
     {
-        private readonly ITokenizer tokenizer;
+		private const string lineEnding = "\n";
+
+		private readonly ITokenizer tokenizer;
         private readonly IParser parser;
         private readonly APLGlobalInfo globalInfo;
 
@@ -30,7 +32,6 @@ namespace Inference.Tests.Interpreter.APL
             globalInfo.Clear();
             globalInfo.LoadPresets();
         }
-
         private object GetParseResult(string input)
         {
             var parseResult = parser.Parse(tokenizer.Tokenize(input));
@@ -91,13 +92,13 @@ namespace Inference.Tests.Interpreter.APL
         {
             Assert.AreEqual("5", Evaluate("(+ 2 3)"));
             Assert.AreEqual("3 3 4 5", Evaluate("(+ 2 testvector1)"));
-            Assert.AreEqual("4 5 7 9\r\n13 15 19 21\r\n25 31 33 39", Evaluate("(+ 2 testmatrix2)"));
+            Assert.AreEqual("4 5 7 9" + lineEnding + "13 15 19 21" + lineEnding + "25 31 33 39", Evaluate("(+ 2 testmatrix2)"));
 
             Assert.AreEqual("8 11 16 24", Evaluate("(+ testvector2 3)"));
             Assert.AreEqual("6 9 15 24", Evaluate("(+ testvector2 testvector1)"));
 
-            Assert.AreEqual("6 7 8 9\r\n10 11 12 13\r\n14 15 16 17", Evaluate("(+ testmatrix1 5)"));
-            Assert.AreEqual("3 5 8 11\r\n16 19 24 27\r\n32 39 42 49", Evaluate("(+ testmatrix1 testmatrix2)"));
+            Assert.AreEqual("6 7 8 9" + lineEnding + "10 11 12 13" + lineEnding + "14 15 16 17", Evaluate("(+ testmatrix1 5)"));
+            Assert.AreEqual("3 5 8 11" + lineEnding + "16 19 24 27" + lineEnding + "32 39 42 49", Evaluate("(+ testmatrix1 testmatrix2)"));
         }
 
         [Test]
@@ -105,13 +106,13 @@ namespace Inference.Tests.Interpreter.APL
         {
             Assert.AreEqual("6", Evaluate("(- 13 7)"));
             Assert.AreEqual("4 4 3 2", Evaluate("(- 5 testvector1)"));
-            Assert.AreEqual("48 47 45 43\r\n39 37 33 31\r\n27 21 19 13", Evaluate("(- 50 testmatrix2)"));
+            Assert.AreEqual("48 47 45 43" + lineEnding + "39 37 33 31" + lineEnding + "27 21 19 13", Evaluate("(- 50 testmatrix2)"));
 
             Assert.AreEqual("2 5 10 18", Evaluate("(- testvector2 3)"));
             Assert.AreEqual("4 7 11 18", Evaluate("(- testvector2 testvector1)"));
 
-            Assert.AreEqual("-3 -2 0 2\r\n6 8 12 14\r\n18 24 26 32", Evaluate("(- testmatrix2 5)"));
-            Assert.AreEqual("1 1 2 3\r\n6 7 10 11\r\n14 19 20 25", Evaluate("(- testmatrix2 testmatrix1)"));
+            Assert.AreEqual("-3 -2 0 2" + lineEnding + "6 8 12 14" + lineEnding + "18 24 26 32", Evaluate("(- testmatrix2 5)"));
+            Assert.AreEqual("1 1 2 3" + lineEnding + "6 7 10 11" + lineEnding + "14 19 20 25", Evaluate("(- testmatrix2 testmatrix1)"));
         }
 
         [Test]
@@ -119,13 +120,13 @@ namespace Inference.Tests.Interpreter.APL
         {
             Assert.AreEqual("91", Evaluate("(* 13 7)"));
             Assert.AreEqual("5 5 10 15", Evaluate("(* 5 testvector1)"));
-            Assert.AreEqual("4 6 10 14\r\n22 26 34 38\r\n46 58 62 74", Evaluate("(* 2 testmatrix2)"));
+            Assert.AreEqual("4 6 10 14" + lineEnding + "22 26 34 38" + lineEnding + "46 58 62 74", Evaluate("(* 2 testmatrix2)"));
 
             Assert.AreEqual("15 24 39 63", Evaluate("(* testvector2 3)"));
             Assert.AreEqual("5 8 26 63", Evaluate("(* testvector2 testvector1)"));
 
-            Assert.AreEqual("6 9 15 21\r\n33 39 51 57\r\n69 87 93 111", Evaluate("(* testmatrix2 3)"));
-            Assert.AreEqual("2 6 15 28\r\n55 78 119 152\r\n207 290 341 444", Evaluate("(* testmatrix2 testmatrix1)"));
+            Assert.AreEqual("6 9 15 21" + lineEnding + "33 39 51 57" + lineEnding + "69 87 93 111", Evaluate("(* testmatrix2 3)"));
+            Assert.AreEqual("2 6 15 28" + lineEnding + "55 78 119 152" + lineEnding + "207 290 341 444", Evaluate("(* testmatrix2 testmatrix1)"));
         }
 
         [Test]
@@ -133,13 +134,13 @@ namespace Inference.Tests.Interpreter.APL
         {
             Assert.AreEqual("1", Evaluate("(/ 13 7)"));
             Assert.AreEqual("20 12 7 4", Evaluate("(/ 100 testvector2)"));
-            Assert.AreEqual("50 33 20 14\r\n9 7 5 5\r\n4 3 3 2", Evaluate("(/ 100 testmatrix2)"));
+            Assert.AreEqual("50 33 20 14" + lineEnding + "9 7 5 5" + lineEnding + "4 3 3 2", Evaluate("(/ 100 testmatrix2)"));
 
             Assert.AreEqual("1 2 4 7", Evaluate("(/ testvector2 3)"));
             Assert.AreEqual("5 8 6 7", Evaluate("(/ testvector2 testvector1)"));
 
-            Assert.AreEqual("0 1 1 2\r\n3 4 5 6\r\n7 9 10 12", Evaluate("(/ testmatrix2 3)"));
-            Assert.AreEqual("2 1 1 1\r\n2 2 2 2\r\n2 2 2 3", Evaluate("(/ testmatrix2 testmatrix1)"));
+            Assert.AreEqual("0 1 1 2" + lineEnding + "3 4 5 6" + lineEnding + "7 9 10 12", Evaluate("(/ testmatrix2 3)"));
+            Assert.AreEqual("2 1 1 1" + lineEnding + "2 2 2 2" + lineEnding + "2 2 2 3", Evaluate("(/ testmatrix2 testmatrix1)"));
         }
 
         [Test]
@@ -147,13 +148,13 @@ namespace Inference.Tests.Interpreter.APL
         {
             Assert.AreEqual("13", Evaluate("(max 13 7)"));
             Assert.AreEqual("10 10 13 21", Evaluate("(max 10 testvector2)"));
-            Assert.AreEqual("15 15 15 15\r\n15 15 17 19\r\n23 29 31 37", Evaluate("(max 15 testmatrix2)"));
+            Assert.AreEqual("15 15 15 15" + lineEnding + "15 15 17 19" + lineEnding + "23 29 31 37", Evaluate("(max 15 testmatrix2)"));
 
             Assert.AreEqual("10 10 13 21", Evaluate("(max testvector2 10)"));
             Assert.AreEqual("11 11 13 21", Evaluate("(max testvector2 (+ testvector1 10))"));
 
-            Assert.AreEqual("15 15 15 15\r\n15 15 17 19\r\n23 29 31 37", Evaluate("(max testmatrix2 15)"));
-            Assert.AreEqual("11 12 13 14\r\n15 16 17 19\r\n23 29 31 37", Evaluate("(max testmatrix2 (+ testmatrix1 10))"));
+            Assert.AreEqual("15 15 15 15" + lineEnding + "15 15 17 19" + lineEnding + "23 29 31 37", Evaluate("(max testmatrix2 15)"));
+            Assert.AreEqual("11 12 13 14" + lineEnding + "15 16 17 19" + lineEnding + "23 29 31 37", Evaluate("(max testmatrix2 (+ testmatrix1 10))"));
         }
 
         [Test]
@@ -165,16 +166,16 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("1", Evaluate("(or 1 1)"));
             Assert.AreEqual("0 1 1 0", Evaluate("(or 0 logicalvector4)"));
             Assert.AreEqual("1 1 1 1", Evaluate("(or 1 logicalvector4)"));
-            Assert.AreEqual("1 1 1 1\r\n0 0 0 0\r\n1 1 1 1", Evaluate("(or 0 logicalmatrix3)"));
-            Assert.AreEqual("1 1 1 1\r\n1 1 1 1\r\n1 1 1 1", Evaluate("(or 1 logicalmatrix3)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "0 0 0 0" + lineEnding + "1 1 1 1", Evaluate("(or 0 logicalmatrix3)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 1 1 1" + lineEnding + "1 1 1 1", Evaluate("(or 1 logicalmatrix3)"));
 
             Assert.AreEqual("0 1 1 0", Evaluate("(or logicalvector4 0)"));
             Assert.AreEqual("1 1 1 1", Evaluate("(or logicalvector4 1)"));
             Assert.AreEqual("0 1 1 1", Evaluate("(or '(0 0 1 1) '(0 1 0 1))"));
 
-            Assert.AreEqual("1 1 1 1\r\n0 0 0 0\r\n1 1 1 1", Evaluate("(or logicalmatrix3 0)"));
-            Assert.AreEqual("1 1 1 1\r\n1 1 1 1\r\n1 1 1 1", Evaluate("(or logicalmatrix3 1)"));
-            Assert.AreEqual("1 1 1 1\r\n0 1 0 1\r\n1 1 1 1", Evaluate("(or logicalmatrix3 logicalmatrix4)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "0 0 0 0" + lineEnding + "1 1 1 1", Evaluate("(or logicalmatrix3 0)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 1 1 1" + lineEnding + "1 1 1 1", Evaluate("(or logicalmatrix3 1)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "0 1 0 1" + lineEnding + "1 1 1 1", Evaluate("(or logicalmatrix3 logicalmatrix4)"));
         }
 
         [Test]
@@ -186,16 +187,16 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("1", Evaluate("(and 1 1)"));
             Assert.AreEqual("0 0 0 0", Evaluate("(and 0 logicalvector4)"));
             Assert.AreEqual("0 1 1 0", Evaluate("(and 1 logicalvector4)"));
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 0\r\n0 0 0 0", Evaluate("(and 0 logicalmatrix3)"));
-            Assert.AreEqual("1 1 1 1\r\n0 0 0 0\r\n1 1 1 1", Evaluate("(and 1 logicalmatrix3)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(and 0 logicalmatrix3)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "0 0 0 0" + lineEnding + "1 1 1 1", Evaluate("(and 1 logicalmatrix3)"));
 
             Assert.AreEqual("0 0 0 0", Evaluate("(and logicalvector4 0)"));
             Assert.AreEqual("0 1 1 0", Evaluate("(and logicalvector4 1)"));
             Assert.AreEqual("0 0 0 1", Evaluate("(and '(0 0 1 1) '(0 1 0 1))"));
 
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 0\r\n0 0 0 0", Evaluate("(and logicalmatrix3 0)"));
-            Assert.AreEqual("1 1 1 1\r\n0 0 0 0\r\n1 1 1 1", Evaluate("(and logicalmatrix3 1)"));
-            Assert.AreEqual("0 1 0 1\r\n0 0 0 0\r\n0 1 0 1", Evaluate("(and logicalmatrix3 logicalmatrix4)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(and logicalmatrix3 0)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "0 0 0 0" + lineEnding + "1 1 1 1", Evaluate("(and logicalmatrix3 1)"));
+            Assert.AreEqual("0 1 0 1" + lineEnding + "0 0 0 0" + lineEnding + "0 1 0 1", Evaluate("(and logicalmatrix3 logicalmatrix4)"));
         }
 
         [Test]
@@ -205,13 +206,13 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("0", Evaluate("(= 13 7)"));
             Assert.AreEqual("1", Evaluate("(= 7 7)"));
             Assert.AreEqual("0 0 1 0", Evaluate("(= 2 testvector1)"));
-            Assert.AreEqual("0 0 0 0\r\n0 1 0 0\r\n0 0 0 0", Evaluate("(= 13 testmatrix2)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 1 0 0" + lineEnding + "0 0 0 0", Evaluate("(= 13 testmatrix2)"));
 
             Assert.AreEqual("0 0 1 0", Evaluate("(= testvector1 2)"));
             Assert.AreEqual("0 1 0 1", Evaluate("(= testvector2 '(8 8 21 21))"));
 
-            Assert.AreEqual("0 0 0 0\r\n0 1 0 0\r\n0 0 0 0", Evaluate("(= testmatrix2 13)"));
-            Assert.AreEqual("0 1 1 0\r\n0 0 0 1\r\n0 1 0 0", Evaluate("(= testmatrix2 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 30)))"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 1 0 0" + lineEnding + "0 0 0 0", Evaluate("(= testmatrix2 13)"));
+            Assert.AreEqual("0 1 1 0" + lineEnding + "0 0 0 1" + lineEnding + "0 1 0 0", Evaluate("(= testmatrix2 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 30)))"));
         }
 
         [Test]
@@ -221,13 +222,13 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("0", Evaluate("(< 13 7)"));
             Assert.AreEqual("0", Evaluate("(< 7 7)"));
             Assert.AreEqual("0 0 1 1", Evaluate("(< 1 testvector1)"));
-            Assert.AreEqual("0 0 0 0\r\n0 0 1 1\r\n1 1 1 1", Evaluate("(< 13 testmatrix2)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 1 1" + lineEnding + "1 1 1 1", Evaluate("(< 13 testmatrix2)"));
 
             Assert.AreEqual("1 1 0 0", Evaluate("(< testvector1 2)"));
             Assert.AreEqual("1 0 1 0", Evaluate("(< testvector2 '(18 8 21 20))"));
 
-            Assert.AreEqual("1 1 1 1\r\n1 0 0 0\r\n0 0 0 0", Evaluate("(< testmatrix2 13)"));
-            Assert.AreEqual("0 0 0 1\r\n0 1 0 0\r\n0 0 0 1", Evaluate("(< testmatrix2 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 38)))"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(< testmatrix2 13)"));
+            Assert.AreEqual("0 0 0 1" + lineEnding + "0 1 0 0" + lineEnding + "0 0 0 1", Evaluate("(< testmatrix2 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 38)))"));
         }
 
         [Test]
@@ -237,13 +238,13 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("1", Evaluate("(> 13 7)"));
             Assert.AreEqual("0", Evaluate("(> 7 7)"));
             Assert.AreEqual("1 1 0 0", Evaluate("(> 2 testvector1)"));
-            Assert.AreEqual("1 1 1 1\r\n1 0 0 0\r\n0 0 0 0", Evaluate("(> 13 testmatrix2)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(> 13 testmatrix2)"));
 
             Assert.AreEqual("0 0 0 1", Evaluate("(> testvector1 2)"));
             Assert.AreEqual("1 0 0 1", Evaluate("(> testvector2 '(3 8 21 20))"));
 
-            Assert.AreEqual("0 0 0 0\r\n0 0 1 1\r\n1 1 1 1", Evaluate("(> testmatrix2 13)"));
-            Assert.AreEqual("1 0 0 0\r\n1 0 1 0\r\n1 0 1 1", Evaluate("(> testmatrix2 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 36)))"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 1 1" + lineEnding + "1 1 1 1", Evaluate("(> testmatrix2 13)"));
+            Assert.AreEqual("1 0 0 0" + lineEnding + "1 0 1 0" + lineEnding + "1 0 1 1", Evaluate("(> testmatrix2 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 36)))"));
         }
 
         [Test]
@@ -305,7 +306,7 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("", Evaluate("(compress '(0 0 0 0) testvector2)"));
             Assert.AreEqual("8 13", Evaluate("(compress logicalvector4 testvector2)"));
             Assert.AreEqual("", Evaluate("(compress '(0 0 0) testmatrix2)"));
-            Assert.AreEqual("2 3 5 7\r\n23 29 31 37", Evaluate("(compress logicalvector3 testmatrix2)"));
+            Assert.AreEqual("2 3 5 7" + lineEnding + "23 29 31 37", Evaluate("(compress logicalvector3 testmatrix2)"));
         }
 
         [Test]
@@ -330,7 +331,7 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("5", Evaluate("(restruct '() testvector2)"));
             Assert.AreEqual("5 8 13", Evaluate("(restruct 3 testvector2)"));
             Assert.AreEqual("5 8 13", Evaluate("(restruct '(3) testvector2)"));
-            Assert.AreEqual("5 8\r\n13 21", Evaluate("(restruct '(2 2) testvector2)"));
+            Assert.AreEqual("5 8" + lineEnding + "13 21", Evaluate("(restruct '(2 2) testvector2)"));
 
             // A three-dimensional matrix:
             Assert.AreEqual(@"Slice (0) :
@@ -420,7 +421,7 @@ Slice (1, 2) :
             Assert.AreEqual("2 3 5 7", Evaluate("(trans '(2 3 5 7))"));
 
             // A two-dimensional matrix:
-            Assert.AreEqual("2 11 23\r\n3 13 29\r\n5 17 31\r\n7 19 37", Evaluate("(trans testmatrix2)"));
+            Assert.AreEqual("2 11 23" + lineEnding + "3 13 29" + lineEnding + "5 17 31" + lineEnding + "7 19 37", Evaluate("(trans testmatrix2)"));
 
             // A three-dimensional matrix:
             var m3string = Evaluate("(set m3 (restruct '(2 3 4) (indx 24)))");
@@ -444,7 +445,7 @@ Slice (1, 2) :
             Assert.AreEqual("13", Evaluate("([] testvector2 3)"));
             Assert.AreEqual("8 5 21", Evaluate("([] testvector2 '(2 1 4))"));
             Assert.AreEqual("11 13 17 19", Evaluate("([] testmatrix2 2)"));
-            Assert.AreEqual("23 29 31 37\r\n2 3 5 7\r\n2 3 5 7", Evaluate("([] testmatrix2 '(3 1 1))"));
+            Assert.AreEqual("23 29 31 37" + lineEnding + "2 3 5 7" + lineEnding + "2 3 5 7", Evaluate("([] testmatrix2 '(3 1 1))"));
         }
 
         #endregion // Operator Tests
@@ -491,7 +492,7 @@ Slice (1, 2) :
         {
             Evaluate("(define idmatrix (n) (restruct (cat n n) (= 1 (indx (+ n 1)))))");
 
-            Assert.AreEqual("1 0 0 0\r\n0 1 0 0\r\n0 0 1 0\r\n0 0 0 1", Evaluate("(idmatrix 4)"));
+            Assert.AreEqual("1 0 0 0" + lineEnding + "0 1 0 0" + lineEnding + "0 0 1 0" + lineEnding + "0 0 0 1", Evaluate("(idmatrix 4)"));
         }
 
         [Test]
@@ -560,12 +561,12 @@ Slice (1, 2) :
 
             Evaluate("(set m1 (restruct '(2 2) '(1 2 3 4)))");
             Evaluate("(set m2 (restruct '(2 2) '(5 6 7 8)))");
-            Assert.AreEqual("19 22\r\n43 50", Evaluate("(matrix-mult m1 m2)"));
+            Assert.AreEqual("19 22" + lineEnding + "43 50", Evaluate("(matrix-mult m1 m2)"));
 
             // Test with non-square matrices; e.g. a 2*3 matrix multiplied by a 3*4 matrix.
             Evaluate("(set m3 (restruct '(2 3) '(1 2 3 4 5 6)))");
             Evaluate("(set m4 (restruct '(3 4) '(1 2 3 4 2 3 4 5 3 4 5 6)))");
-            Assert.AreEqual("14 20 26 32\r\n32 47 62 77", Evaluate("(matrix-mult m3 m4)"));
+            Assert.AreEqual("14 20 26 32" + lineEnding + "32 47 62 77", Evaluate("(matrix-mult m3 m4)"));
         }
 
         [Test]
@@ -634,36 +635,36 @@ Slice (1, 2) :
         {
             Evaluate("(define 1-to-n-matrix (n) (restruct (cat n n) (indx n)))");
 
-            Assert.AreEqual("1 2 3 4\r\n1 2 3 4\r\n1 2 3 4\r\n1 2 3 4", Evaluate("(1-to-n-matrix 4)"));
+            Assert.AreEqual("1 2 3 4" + lineEnding + "1 2 3 4" + lineEnding + "1 2 3 4" + lineEnding + "1 2 3 4", Evaluate("(1-to-n-matrix 4)"));
 
             // Exercise 5a : The identity matrix
             Evaluate("(define identity-matrix (n) (= (1-to-n-matrix n) (trans (1-to-n-matrix n))))");
 
-            Assert.AreEqual("1 0 0 0\r\n0 1 0 0\r\n0 0 1 0\r\n0 0 0 1", Evaluate("(identity-matrix 4)"));
+            Assert.AreEqual("1 0 0 0" + lineEnding + "0 1 0 0" + lineEnding + "0 0 1 0" + lineEnding + "0 0 0 1", Evaluate("(identity-matrix 4)"));
 
             // Exercise 5b : The secondary diagonal matrix
             Evaluate("(define n-to-1-matrix (n) (- (+1 n) (1-to-n-matrix n)))");
             Evaluate("(define sec-diag-matrix (n) (= (n-to-1-matrix n) (trans (1-to-n-matrix n))))");
 
-            Assert.AreEqual("0 0 0 1\r\n0 0 1 0\r\n0 1 0 0\r\n1 0 0 0", Evaluate("(sec-diag-matrix 4)"));
+            Assert.AreEqual("0 0 0 1" + lineEnding + "0 0 1 0" + lineEnding + "0 1 0 0" + lineEnding + "1 0 0 0", Evaluate("(sec-diag-matrix 4)"));
 
             // Exercise 5c : The upper triangular logical matrix
             Evaluate("(define >= (x y) (or (> x y) (= x y)))");
             Evaluate("(define upper-triangular-logical (n) (>= (1-to-n-matrix n) (trans (1-to-n-matrix n))))");
 
-            Assert.AreEqual("1 1 1 1\r\n0 1 1 1\r\n0 0 1 1\r\n0 0 0 1", Evaluate("(upper-triangular-logical 4)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "0 1 1 1" + lineEnding + "0 0 1 1" + lineEnding + "0 0 0 1", Evaluate("(upper-triangular-logical 4)"));
 
             // Exercise 5d : The lower triangular 1-to-n matrix
             Evaluate("(define lower-triangular-logical (n) (trans (upper-triangular-logical n)))");
             Evaluate("(define lower-triangular-1-to-n (n) (* (1-to-n-matrix n) (lower-triangular-logical n)))");
 
-            Assert.AreEqual("1 0 0 0\r\n1 2 0 0\r\n1 2 3 0\r\n1 2 3 4", Evaluate("(lower-triangular-1-to-n 4)"));
+            Assert.AreEqual("1 0 0 0" + lineEnding + "1 2 0 0" + lineEnding + "1 2 3 0" + lineEnding + "1 2 3 4", Evaluate("(lower-triangular-1-to-n 4)"));
 
             // Exercise 5e
             Evaluate("(define filter-out-negtives (m) (* m (> m 0)))");
             Evaluate("(define exercise5e (n) (filter-out-negtives (+1 (- (trans (1-to-n-matrix n)) (1-to-n-matrix n)))))");
 
-            Assert.AreEqual("1 0 0 0\r\n2 1 0 0\r\n3 2 1 0\r\n4 3 2 1", Evaluate("(exercise5e 4)"));
+            Assert.AreEqual("1 0 0 0" + lineEnding + "2 1 0 0" + lineEnding + "3 2 1 0" + lineEnding + "4 3 2 1", Evaluate("(exercise5e 4)"));
 
             // Exercise 6 : Diagonal product
             Evaluate("(define diag-prod (m) (*/ (+/ (* m (identity-matrix ([] (shape m) 1))))))");
@@ -698,9 +699,9 @@ Slice (1, 2) :
 
             Assert.AreEqual("0 0 0 0 0", Evaluate("(expand '(0 0 0 0 0) '())"));
             Assert.AreEqual("2 0 4 0 8", Evaluate("(expand '(1 0 1 0 1) '(2 4 8))"));   // The example from page 86
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 0\r\n0 0 0 0\r\n0 0 0 0\r\n0 0 0 0",
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0",
                 Evaluate("(expand '(0 0 0 0 0) (restruct '(0 4) 0))"));
-            Assert.AreEqual("1 2 3 4\r\n0 0 0 0\r\n5 6 7 8\r\n0 0 0 0\r\n9 10 11 12",
+            Assert.AreEqual("1 2 3 4" + lineEnding + "0 0 0 0" + lineEnding + "5 6 7 8" + lineEnding + "0 0 0 0" + lineEnding + "9 10 11 12",
                 Evaluate("(expand '(1 0 1 0 1) (restruct '(3 4) (indx 12)))"));
         }
 
@@ -769,11 +770,11 @@ Slice (1, 2) :
             Assert.AreEqual("-2 2", Evaluate("(range SCORES)"));
             Assert.AreEqual("1", Evaluate("(mode FREQS -2)"));
             Assert.AreEqual("0", Evaluate("(median CUMFREQS -2)"));
-            Assert.AreEqual("-2 1 0 0\r\n-1 1 0 0\r\n0 1 1 0\r\n1 1 1 1\r\n2 1 0 0",
+            Assert.AreEqual("-2 1 0 0" + lineEnding + "-1 1 0 0" + lineEnding + "0 1 1 0" + lineEnding + "1 1 1 1" + lineEnding + "2 1 0 0",
                 Evaluate("(histo FREQS -2 2)"));
-            Assert.AreEqual("0 0 0 1 0\r\n0 0 1 0 0\r\n1 1 0 0 1\r\n-2 -1 0 1 2",
+            Assert.AreEqual("0 0 0 1 0" + lineEnding + "0 0 1 0 0" + lineEnding + "1 1 0 0 1" + lineEnding + "-2 -1 0 1 2",
                 Evaluate("(graph FREQS -2)"));
-            Assert.AreEqual("0 0 0 0 1\r\n0 0 0 1 0\r\n0 0 0 0 0\r\n0 0 0 0 0\r\n0 0 1 0 0\r\n0 0 0 0 0\r\n0 1 0 0 0\r\n1 0 0 0 0\r\n-2 -1 0 1 2",
+            Assert.AreEqual("0 0 0 0 1" + lineEnding + "0 0 0 1 0" + lineEnding + "0 0 0 0 0" + lineEnding + "0 0 0 0 0" + lineEnding + "0 0 1 0 0" + lineEnding + "0 0 0 0 0" + lineEnding + "0 1 0 0 0" + lineEnding + "1 0 0 0 0" + lineEnding + "-2 -1 0 1 2",
                 Evaluate("(graph CUMFREQS -2)"));
 
             // Exercise 10a) on page 90
@@ -800,7 +801,7 @@ Slice (1, 2) :
            (hist ([] lines (+1 freqs))))
         (addcol (- (indx width) (- 1 lo)) 1 hist)))");
 
-            Assert.AreEqual("-2 1 0 0\r\n-1 1 0 0\r\n0 1 1 0\r\n1 1 1 1\r\n2 1 0 0",
+            Assert.AreEqual("-2 1 0 0" + lineEnding + "-1 1 0 0" + lineEnding + "0 1 1 0" + lineEnding + "1 1 1 1" + lineEnding + "2 1 0 0",
                 Evaluate("(histo-10b FREQS -2 2)"));
 
             // Exercise 10b) part 2: implement graph using a comparison of two matrices
@@ -813,9 +814,9 @@ Slice (1, 2) :
            (thegraph (reverse (trans (= matrix1 matrix2)))))
         (addrow (- (indx (shape freqs)) (- 1 lo)) (+ length 1) thegraph)))");
 
-            Assert.AreEqual("0 0 0 1 0\r\n0 0 1 0 0\r\n1 1 0 0 1\r\n-2 -1 0 1 2",
+            Assert.AreEqual("0 0 0 1 0" + lineEnding + "0 0 1 0 0" + lineEnding + "1 1 0 0 1" + lineEnding + "-2 -1 0 1 2",
                 Evaluate("(graph-10b FREQS -2)"));
-            Assert.AreEqual("0 0 0 0 1\r\n0 0 0 1 0\r\n0 0 0 0 0\r\n0 0 0 0 0\r\n0 0 1 0 0\r\n0 0 0 0 0\r\n0 1 0 0 0\r\n1 0 0 0 0\r\n-2 -1 0 1 2",
+            Assert.AreEqual("0 0 0 0 1" + lineEnding + "0 0 0 1 0" + lineEnding + "0 0 0 0 0" + lineEnding + "0 0 0 0 0" + lineEnding + "0 0 1 0 0" + lineEnding + "0 0 0 0 0" + lineEnding + "0 1 0 0 0" + lineEnding + "1 0 0 0 0" + lineEnding + "-2 -1 0 1 2",
                 Evaluate("(graph CUMFREQS -2)"));
 
             // Exercise 10c) A grouped histogram
@@ -845,7 +846,7 @@ Slice (1, 2) :
 
             Assert.AreEqual("6 15 24 10", Evaluate("(interval-sums (indx 10) 3)"));
             Assert.AreEqual("1 4 7 10", Evaluate("(interval-labels 1 10 3)"));
-            Assert.AreEqual("-2 1 1 0\r\n1 1 1 1\r\n4 0 0 0\r\n7 1 0 0",
+            Assert.AreEqual("-2 1 1 0" + lineEnding + "1 1 1 1" + lineEnding + "4 0 0 0" + lineEnding + "7 1 0 0",
                 Evaluate("(grouped-histogram '(1 0 1 2 1 0 0 0 0 1) -2 7 3)"));
         }
 
@@ -864,8 +865,8 @@ Slice (1, 2) :
         [Test]
         public void DoubleSubscriptingTest()  // See exercise 13 on page 90
         {
-            Assert.AreEqual("7 9\r\n17 19", Evaluate("([;] (restruct '(5 5) (indx 25)) '(2 4) '(2 4))"));
-            Assert.AreEqual("1 4 5\r\n6 9 10", Evaluate("([;] (restruct '(4 5) (indx 20)) '(1 2) '(1 4 5))"));
+            Assert.AreEqual("7 9" + lineEnding + "17 19", Evaluate("([;] (restruct '(5 5) (indx 25)) '(2 4) '(2 4))"));
+            Assert.AreEqual("1 4 5" + lineEnding + "6 9 10", Evaluate("([;] (restruct '(4 5) (indx 20)) '(1 2) '(1 4 5))"));
         }
 
         #region Tests with Floating-Point Numbers
@@ -882,9 +883,9 @@ Slice (1, 2) :
             Assert.AreEqual("1.5 1.5 2.5 3.5", Evaluate("(+ 0.5 testvector1)"));
             Assert.AreEqual("1.5 1.75 2.0 2.25", Evaluate("(+ 0.5 floatvector5)"));
 
-            Assert.AreEqual("4.0 5.0 7.5 9.5\r\n13.0 15.0 19.5 21.5\r\n25.0 31.0 33.5 39.5", Evaluate("(+ 2 floatmatrix6)"));
-            Assert.AreEqual("2.5 3.5 5.5 7.5\r\n11.5 13.5 17.5 19.5\r\n23.5 29.5 31.5 37.5", Evaluate("(+ 0.5 testmatrix2)"));
-            Assert.AreEqual("2.5 3.5 6.0 8.0\r\n11.5 13.5 18.0 20.0\r\n23.5 29.5 32.0 38.0", Evaluate("(+ 0.5 floatmatrix6)"));
+            Assert.AreEqual("4.0 5.0 7.5 9.5" + lineEnding + "13.0 15.0 19.5 21.5" + lineEnding + "25.0 31.0 33.5 39.5", Evaluate("(+ 2 floatmatrix6)"));
+            Assert.AreEqual("2.5 3.5 5.5 7.5" + lineEnding + "11.5 13.5 17.5 19.5" + lineEnding + "23.5 29.5 31.5 37.5", Evaluate("(+ 0.5 testmatrix2)"));
+            Assert.AreEqual("2.5 3.5 6.0 8.0" + lineEnding + "11.5 13.5 18.0 20.0" + lineEnding + "23.5 29.5 32.0 38.0", Evaluate("(+ 0.5 floatmatrix6)"));
 
             Assert.AreEqual("4.0 4.25 4.5 4.75", Evaluate("(+ floatvector5 3)"));
             Assert.AreEqual("5.5 8.5 13.5 21.5", Evaluate("(+ testvector2 0.5)"));
@@ -894,13 +895,13 @@ Slice (1, 2) :
             Assert.AreEqual("7.0 11.5 18.0 28.5", Evaluate("(+ testvector2 floatvector6)"));
             Assert.AreEqual("3.0 4.75 6.5 9.25", Evaluate("(+ floatvector5 floatvector6)"));
 
-            Assert.AreEqual("6.0 7.5 8.0 9.5\r\n10.0 11.5 12.0 13.5\r\n14.0 15.5 16.0 17.5", Evaluate("(+ floatmatrix5 5)"));
-            Assert.AreEqual("1.25 2.25 3.25 4.25\r\n5.25 6.25 7.25 8.25\r\n9.25 10.25 11.25 12.25", Evaluate("(+ testmatrix1 0.25)"));
-            Assert.AreEqual("1.25 2.75 3.25 4.75\r\n5.25 6.75 7.25 8.75\r\n9.25 10.75 11.25 12.75", Evaluate("(+ floatmatrix5 0.25)"));
+            Assert.AreEqual("6.0 7.5 8.0 9.5" + lineEnding + "10.0 11.5 12.0 13.5" + lineEnding + "14.0 15.5 16.0 17.5", Evaluate("(+ floatmatrix5 5)"));
+            Assert.AreEqual("1.25 2.25 3.25 4.25" + lineEnding + "5.25 6.25 7.25 8.25" + lineEnding + "9.25 10.25 11.25 12.25", Evaluate("(+ testmatrix1 0.25)"));
+            Assert.AreEqual("1.25 2.75 3.25 4.75" + lineEnding + "5.25 6.75 7.25 8.75" + lineEnding + "9.25 10.75 11.25 12.75", Evaluate("(+ floatmatrix5 0.25)"));
 
-            Assert.AreEqual("3.0 5.5 8.0 11.5\r\n16.0 19.5 24.0 27.5\r\n32.0 39.5 42.0 49.5", Evaluate("(+ floatmatrix5 testmatrix2)"));
-            Assert.AreEqual("3.0 5.0 8.5 11.5\r\n16.0 19.0 24.5 27.5\r\n32.0 39.0 42.5 49.5", Evaluate("(+ testmatrix1 floatmatrix6)"));
-            Assert.AreEqual("3.0 5.5 8.5 12.0\r\n16.0 19.5 24.5 28.0\r\n32.0 39.5 42.5 50.0", Evaluate("(+ floatmatrix5 floatmatrix6)"));
+            Assert.AreEqual("3.0 5.5 8.0 11.5" + lineEnding + "16.0 19.5 24.0 27.5" + lineEnding + "32.0 39.5 42.0 49.5", Evaluate("(+ floatmatrix5 testmatrix2)"));
+            Assert.AreEqual("3.0 5.0 8.5 11.5" + lineEnding + "16.0 19.0 24.5 27.5" + lineEnding + "32.0 39.0 42.5 49.5", Evaluate("(+ testmatrix1 floatmatrix6)"));
+            Assert.AreEqual("3.0 5.5 8.5 12.0" + lineEnding + "16.0 19.5 24.5 28.0" + lineEnding + "32.0 39.5 42.5 50.0", Evaluate("(+ floatmatrix5 floatmatrix6)"));
         }
 
         [Test]
@@ -917,9 +918,9 @@ Slice (1, 2) :
             Assert.AreEqual("1 0 0 0", Evaluate("(= 1 floatvector5)"));
             Assert.AreEqual("0 1 0 0", Evaluate("(= 1.25 floatvector5)"));
 
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 0\r\n0 0 1 0", Evaluate("(= 31.0 testmatrix2)"));
-            Assert.AreEqual("0 1 0 0\r\n0 0 0 0\r\n0 0 0 0", Evaluate("(= 3 floatmatrix6)"));
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 1\r\n0 0 0 0", Evaluate("(= 8.5 floatmatrix5)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 1 0", Evaluate("(= 31.0 testmatrix2)"));
+            Assert.AreEqual("0 1 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(= 3 floatmatrix6)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 1" + lineEnding + "0 0 0 0", Evaluate("(= 8.5 floatmatrix5)"));
 
             Assert.AreEqual("0 0 1 0", Evaluate("(= floatvector6 5)"));
             Assert.AreEqual("0 0 0 1", Evaluate("(= testvector1 3.0)"));
@@ -929,13 +930,13 @@ Slice (1, 2) :
             Assert.AreEqual("0 1 1 0", Evaluate("(= testvector2 '(8.0 8.0 13.0 13.0))"));
             Assert.AreEqual("1 0 0 1", Evaluate("(= floatvector5 '(1.0 1.5 1.25 1.75))"));
 
-            Assert.AreEqual("0 0 0 0\r\n1 0 0 0\r\n0 0 0 0", Evaluate("(= floatmatrix6 11)"));
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 0\r\n0 0 0 1", Evaluate("(= testmatrix2 37.0)"));
-            Assert.AreEqual("0 0 1 0\r\n0 0 0 0\r\n0 0 0 0", Evaluate("(= floatmatrix6 5.5)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "1 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(= floatmatrix6 11)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 1", Evaluate("(= testmatrix2 37.0)"));
+            Assert.AreEqual("0 0 1 0" + lineEnding + "0 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(= floatmatrix6 5.5)"));
 
-            Assert.AreEqual("0 1 0 0\r\n0 0 0 0\r\n1 1 0 0", Evaluate("(= floatmatrix6 (restruct '(3 4) '(1 3 5 9 10 17 13 19 23 29 30 30)))"));
-            Assert.AreEqual("0 0 1 0\r\n1 0 0 0\r\n1 0 0 0", Evaluate("(= testmatrix2 (restruct '(3 4) '(1.5 3.5 5.0 9.5 11.0 17.0 13.5 19.5 23.0 29.5 30.0 30.5)))"));
-            Assert.AreEqual("0 1 1 0\r\n0 1 0 1\r\n1 0 0 1", Evaluate("(= floatmatrix6 (restruct '(3 4) '(1.0 3.0 5.5 9.0 10.5 13.0 13.5 19.5 23.0 29.5 30.0 37.5)))"));
+            Assert.AreEqual("0 1 0 0" + lineEnding + "0 0 0 0" + lineEnding + "1 1 0 0", Evaluate("(= floatmatrix6 (restruct '(3 4) '(1 3 5 9 10 17 13 19 23 29 30 30)))"));
+            Assert.AreEqual("0 0 1 0" + lineEnding + "1 0 0 0" + lineEnding + "1 0 0 0", Evaluate("(= testmatrix2 (restruct '(3 4) '(1.5 3.5 5.0 9.5 11.0 17.0 13.5 19.5 23.0 29.5 30.0 30.5)))"));
+            Assert.AreEqual("0 1 1 0" + lineEnding + "0 1 0 1" + lineEnding + "1 0 0 1", Evaluate("(= floatmatrix6 (restruct '(3 4) '(1.0 3.0 5.5 9.0 10.5 13.0 13.5 19.5 23.0 29.5 30.0 37.5)))"));
         }
 
         [Test]
@@ -964,9 +965,9 @@ Slice (1, 2) :
             Assert.AreEqual("0 1 1 1", Evaluate("(< 2 floatvector6)"));
             Assert.AreEqual("0 0 0 1", Evaluate("(< 6.25 floatvector6)"));
 
-            Assert.AreEqual("0 0 0 0\r\n0 0 1 1\r\n1 1 1 1", Evaluate("(< 13.5 testmatrix2)"));
-            Assert.AreEqual("0 0 0 0\r\n0 0 0 1\r\n1 1 1 1", Evaluate("(< 7 floatmatrix5)"));
-            Assert.AreEqual("0 0 0 0\r\n1 1 1 1\r\n1 1 1 1", Evaluate("(< 4.75 floatmatrix5)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 1 1" + lineEnding + "1 1 1 1", Evaluate("(< 13.5 testmatrix2)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "0 0 0 1" + lineEnding + "1 1 1 1", Evaluate("(< 7 floatmatrix5)"));
+            Assert.AreEqual("0 0 0 0" + lineEnding + "1 1 1 1" + lineEnding + "1 1 1 1", Evaluate("(< 4.75 floatmatrix5)"));
 
             Assert.AreEqual("1 1 0 0", Evaluate("(< floatvector6 5)"));
             Assert.AreEqual("1 1 1 0", Evaluate("(< testvector1 2.25)"));
@@ -976,13 +977,13 @@ Slice (1, 2) :
             Assert.AreEqual("0 0 1 0", Evaluate("(< testvector2 '(4.75 8.0 21.5 20.25))"));
             Assert.AreEqual("0 1 1 0", Evaluate("(< floatvector6 '(1.25 5.0 5.125 0.0))"));
 
-            Assert.AreEqual("1 1 1 1\r\n1 1 1 1\r\n1 1 0 0", Evaluate("(< floatmatrix6 30)"));
-            Assert.AreEqual("1 1 1 1\r\n1 0 0 0\r\n0 0 0 0", Evaluate("(< testmatrix2 12.75)"));
-            Assert.AreEqual("1 1 1 1\r\n1 1 0 0\r\n0 0 0 0", Evaluate("(< floatmatrix6 17.5)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 1 1 1" + lineEnding + "1 1 0 0", Evaluate("(< floatmatrix6 30)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 0 0 0" + lineEnding + "0 0 0 0", Evaluate("(< testmatrix2 12.75)"));
+            Assert.AreEqual("1 1 1 1" + lineEnding + "1 1 0 0" + lineEnding + "0 0 0 0", Evaluate("(< floatmatrix6 17.5)"));
 
-            Assert.AreEqual("0 0 0 1\r\n0 1 0 0\r\n0 0 0 1", Evaluate("(< floatmatrix6 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 38)))"));
-            Assert.AreEqual("1 0 1 1\r\n0 1 0 1\r\n0 0 1 0", Evaluate("(< testmatrix2 (restruct '(3 4) '(2.5 3.0 5.5 9.0 10.5 17.0 13.5 19.5 22.5 29.0 31.5 37.0)))"));
-            Assert.AreEqual("1 0 1 0\r\n1 0 0 1\r\n1 0 0 1", Evaluate("(< floatmatrix6 (restruct '(3 4) '(2.5 3.0 6.0 7.5 11.5 12.0 13.5 20.0 23.5 29.0 31.5 38.0)))"));
+            Assert.AreEqual("0 0 0 1" + lineEnding + "0 1 0 0" + lineEnding + "0 0 0 1", Evaluate("(< floatmatrix6 (restruct '(3 4) '(1 3 5 9 10 17 13 19 22 29 30 38)))"));
+            Assert.AreEqual("1 0 1 1" + lineEnding + "0 1 0 1" + lineEnding + "0 0 1 0", Evaluate("(< testmatrix2 (restruct '(3 4) '(2.5 3.0 5.5 9.0 10.5 17.0 13.5 19.5 22.5 29.0 31.5 37.0)))"));
+            Assert.AreEqual("1 0 1 0" + lineEnding + "1 0 0 1" + lineEnding + "1 0 0 1", Evaluate("(< floatmatrix6 (restruct '(3 4) '(2.5 3.0 6.0 7.5 11.5 12.0 13.5 20.0 23.5 29.0 31.5 38.0)))"));
         }
 
         [Test]
@@ -1001,7 +1002,7 @@ Slice (1, 2) :
             Assert.AreEqual("", Evaluate("(compress '(0 0 0 0) floatvector6)"));
             Assert.AreEqual("3.5 5.0", Evaluate("(compress logicalvector4 floatvector6)"));
             Assert.AreEqual("", Evaluate("(compress '(0 0 0) floatmatrix6)"));
-            Assert.AreEqual("2.0 3.0 5.5 7.5\r\n23.0 29.0 31.5 37.5", Evaluate("(compress logicalvector3 floatmatrix6)"));
+            Assert.AreEqual("2.0 3.0 5.5 7.5" + lineEnding + "23.0 29.0 31.5 37.5", Evaluate("(compress logicalvector3 floatmatrix6)"));
         }
 
         [Test]
@@ -1026,7 +1027,7 @@ Slice (1, 2) :
             Assert.AreEqual("2.0", Evaluate("(restruct '() floatvector6)"));
             Assert.AreEqual("2.0 3.5 5.0", Evaluate("(restruct 3 floatvector6)"));
             Assert.AreEqual("2.0 3.5 5.0", Evaluate("(restruct '(3) floatvector6)"));
-            Assert.AreEqual("2.0 3.5\r\n5.0 7.5", Evaluate("(restruct '(2 2) floatvector6)"));
+            Assert.AreEqual("2.0 3.5" + lineEnding + "5.0 7.5", Evaluate("(restruct '(2 2) floatvector6)"));
         }
 
         [Test]
@@ -1039,7 +1040,7 @@ Slice (1, 2) :
         [Test]
         public void FloatTransTest()     // Matrix transposition
         {
-            Assert.AreEqual("2.0 11.0 23.0\r\n3.0 13.0 29.0\r\n5.5 17.5 31.5\r\n7.5 19.5 37.5", Evaluate("(trans floatmatrix6)"));
+            Assert.AreEqual("2.0 11.0 23.0" + lineEnding + "3.0 13.0 29.0" + lineEnding + "5.5 17.5 31.5" + lineEnding + "7.5 19.5 37.5", Evaluate("(trans floatmatrix6)"));
         }
 
         [Test]
@@ -1048,7 +1049,7 @@ Slice (1, 2) :
             Assert.AreEqual("1.5", Evaluate("([] floatvector5 3)"));
             Assert.AreEqual("3.5 2.0 7.5", Evaluate("([] floatvector6 '(2 1 4))"));
             Assert.AreEqual("11.0 13.0 17.5 19.5", Evaluate("([] floatmatrix6 2)"));
-            Assert.AreEqual("23.0 29.0 31.5 37.5\r\n2.0 3.0 5.5 7.5\r\n2.0 3.0 5.5 7.5", Evaluate("([] floatmatrix6 '(3 1 1))"));
+            Assert.AreEqual("23.0 29.0 31.5 37.5" + lineEnding + "2.0 3.0 5.5 7.5" + lineEnding + "2.0 3.0 5.5 7.5", Evaluate("([] floatmatrix6 '(3 1 1))"));
         }
 
         [Test]
@@ -1105,8 +1106,8 @@ Slice (1, 2) :
         [Test]
         public void FloatDoubleSubscriptingTest()  // See exercise 13 on page 90
         {
-            Assert.AreEqual("3.5 4.5\r\n8.5 9.5", Evaluate("([;] (restruct '(5 5) (/ (indx 25) 2.0)) '(2 4) '(2 4))"));
-            Assert.AreEqual("0.5 2.0 2.5\r\n3.0 4.5 5.0", Evaluate("([;] (restruct '(4 5) (/ (indx 20) 2.0)) '(1 2) '(1 4 5))"));
+            Assert.AreEqual("3.5 4.5" + lineEnding + "8.5 9.5", Evaluate("([;] (restruct '(5 5) (/ (indx 25) 2.0)) '(2 4) '(2 4))"));
+            Assert.AreEqual("0.5 2.0 2.5" + lineEnding + "3.0 4.5 5.0", Evaluate("([;] (restruct '(4 5) (/ (indx 20) 2.0)) '(1 2) '(1 4 5))"));
         }
 
         #endregion

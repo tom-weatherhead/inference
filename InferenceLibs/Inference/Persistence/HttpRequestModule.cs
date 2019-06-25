@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Inference.Persistence
 {
-    public class HttpRequestModule : IHttpModule
+    public class HttpRequestModule // : IHttpModule
     {
         public String ModuleName
         {
@@ -16,14 +16,18 @@ namespace Inference.Persistence
             }
         }
 
-        public void Init(HttpApplication application)
-        {
-            application.BeginRequest += new EventHandler(this.Application_BeginRequest);
-            application.EndRequest += new EventHandler(this.Application_EndRequest);
-            application.Error += new EventHandler(this.Application_Error);
-        }
+  //      public void Init(HttpApplication application)
+  //      {
+  //          application.BeginRequest += new EventHandler(this.Application_BeginRequest);
+  //          application.EndRequest += new EventHandler(this.Application_EndRequest);
+  //          application.Error += new EventHandler(this.Application_Error);
+		//}
 
-        private void Application_BeginRequest(object source, EventArgs e)
+		public void Init()
+		{
+		}
+
+		private void Application_BeginRequest(object source, EventArgs e)
         {
             // Note: This is useless (because the session will be eventually created when needed)
             // And it may be a waste of resources because it might not be used at all
