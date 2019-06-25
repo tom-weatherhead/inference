@@ -352,7 +352,8 @@ namespace InferenceConsoleApp
 
         static void Main(string[] args)
         {
-            var quiet = args.Length > 1;    // True iff we are invoking an interpreter on a particular file.
+			// var quiet = args.Length > 1;    // True iff we are invoking an interpreter on a particular file.
+			var quiet = false;
 
             if (!quiet)
             {
@@ -364,9 +365,14 @@ namespace InferenceConsoleApp
 
                 if (args == null || args.Length == 0)
                 {
-                    Test18CloneStack();
-                }
-                else
+					// Test18CloneStack();
+
+					Inference.Interpreter.IInterpreter interpreter = null;
+
+					interpreter = new Inference.Interpreter.Scheme.SchemeInterpreter(quiet);
+					interpreter.ReadEvalPrintLoop();
+				}
+				else
                 {
                     Inference.Interpreter.IInterpreter interpreter = null;
 
