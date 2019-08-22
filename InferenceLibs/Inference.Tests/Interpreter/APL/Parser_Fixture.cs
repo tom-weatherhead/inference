@@ -13,7 +13,9 @@ namespace Inference.Tests.Interpreter.APL
     [TestFixture]
     public class Parser_Fixture
     {
-		private const string lineEnding = "\n";
+		//string lineEnd = System.Environment.NewLine;
+		//private const string lineEnding = "\n";
+		private string lineEnding = System.Environment.NewLine;
 
 		private readonly ITokenizer tokenizer;
         private readonly IParser parser;
@@ -334,61 +336,52 @@ namespace Inference.Tests.Interpreter.APL
             Assert.AreEqual("5 8" + lineEnding + "13 21", Evaluate("(restruct '(2 2) testvector2)"));
 
             // A three-dimensional matrix:
-            Assert.AreEqual(@"Slice (0) :
-1 2 3 4
-5 6 7 8
-9 10 11 12
-
-Slice (1) :
-13 14 15 16
-17 18 19 20
-21 22 23 24", Evaluate("(restruct '(2 3 4) (indx 24))"));
+            Assert.AreEqual(@"Slice (0) :" + lineEnding +
+				"1 2 3 4" + lineEnding +
+				"5 6 7 8" + lineEnding +
+				"9 10 11 12" + lineEnding + lineEnding +
+				"Slice (1) :" + lineEnding +
+				"13 14 15 16" + lineEnding +
+				"17 18 19 20" + lineEnding +
+				"21 22 23 24", Evaluate("(restruct '(2 3 4) (indx 24))"));
 
             // A four-dimensional matrix:
-            Assert.AreEqual(@"Slice (0, 0) :
-1 2 3 4
-5 6 7 8
-9 10 11 12
-
-Slice (0, 1) :
-13 14 15 16
-17 18 19 20
-21 22 23 24
-
-Slice (1, 0) :
-25 26 27 28
-29 30 31 32
-33 34 35 36
-
-Slice (1, 1) :
-37 38 39 40
-41 42 43 44
-45 46 47 48", Evaluate("(restruct '(2 2 3 4) (indx 48))"));
+            Assert.AreEqual(@"Slice (0, 0) :" + lineEnding +
+				"1 2 3 4" + lineEnding +
+				"5 6 7 8" + lineEnding +
+				"9 10 11 12" + lineEnding + lineEnding +
+				"Slice (0, 1) :" + lineEnding +
+				"13 14 15 16" + lineEnding +
+				"17 18 19 20" + lineEnding +
+				"21 22 23 24" + lineEnding + lineEnding +
+				"Slice (1, 0) :" + lineEnding +
+				"25 26 27 28" + lineEnding +
+				"29 30 31 32" + lineEnding +
+				"33 34 35 36" + lineEnding + lineEnding +
+				"Slice (1, 1) :" + lineEnding +
+				"37 38 39 40" + lineEnding +
+				"41 42 43 44" + lineEnding +
+				"45 46 47 48", Evaluate("(restruct '(2 2 3 4) (indx 48))"));
 
             // Another four-dimensional matrix:
-            Assert.AreEqual(@"Slice (0, 0) :
-1 2 3 4
-5 6 7 8
-
-Slice (0, 1) :
-9 10 11 12
-13 14 15 16
-
-Slice (0, 2) :
-17 18 19 20
-21 22 23 24
-
-Slice (1, 0) :
-25 26 27 28
-29 30 31 32
-
-Slice (1, 1) :
-33 34 35 36
-37 38 39 40
-
-Slice (1, 2) :
-41 42 43 44
-45 46 47 48", Evaluate("(restruct '(2 3 2 4) (indx 48))"));
+            Assert.AreEqual(@"Slice (0, 0) :" + lineEnding +
+				"1 2 3 4" + lineEnding +
+				"5 6 7 8" + lineEnding + lineEnding +
+				"Slice (0, 1) :" + lineEnding +
+				"9 10 11 12" + lineEnding +
+				"13 14 15 16" + lineEnding + lineEnding +
+				"Slice (0, 2) :" + lineEnding +
+				"17 18 19 20" + lineEnding +
+				"21 22 23 24" + lineEnding + lineEnding +
+				"Slice (1, 0) :" + lineEnding +
+				"25 26 27 28" + lineEnding +
+				"29 30 31 32" + lineEnding + lineEnding +
+				"Slice (1, 1) :" + lineEnding +
+				"33 34 35 36" + lineEnding +
+				"37 38 39 40" + lineEnding + lineEnding +
+				"Slice (1, 2) :" + lineEnding +
+				"41 42 43 44" + lineEnding +
+				"45 46 47 48", Evaluate("(restruct '(2 3 2 4) (indx 48))"));
         }
 
         [Test]

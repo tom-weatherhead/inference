@@ -14,7 +14,8 @@ namespace Inference.Tests.Interpreter.Prolog
     [TestFixture]
     public class Prolog2Parser_Fixture
     {
-        private const string clauseAdded = PrologGlobalInfo.ClauseAdded;
+		private string lineEnd = System.Environment.NewLine;
+		private const string clauseAdded = PrologGlobalInfo.ClauseAdded;
         private const string operatorAdded = PrologGlobalInfo.OperatorAdded;
         private const string satisfied = PrologGlobalInfo.Satisfied;
         private const string notSatisfied = PrologGlobalInfo.NotSatisfied;
@@ -130,8 +131,8 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("increment(X, Y) :- Y is X + 1."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("decrement(X, Y) :- Y is X - 1."));
 
-            Assert.AreEqual("Y = 14\r\n" + satisfied, globalInfo.ProcessInputString("?- increment(13, Y)."));
-            Assert.AreEqual("Y = 12\r\n" + satisfied, globalInfo.ProcessInputString("?- decrement(13, Y)."));
+            Assert.AreEqual("Y = 14" + this.lineEnd + satisfied, globalInfo.ProcessInputString(" ?- increment(13, Y)."));
+            Assert.AreEqual("Y = 12" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- decrement(13, Y)."));
         }
 
         [Test]
@@ -199,7 +200,7 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("factorial(0,1)."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("factorial(N,F) :- N > 0, N1 is N - 1, factorial(N1,F1), F is N * F1."));
 
-            Assert.AreEqual("W = 6\r\n" + satisfied, globalInfo.ProcessInputString("?- factorial(3,W)."));
+            Assert.AreEqual("W = 6" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- factorial(3,W)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- factorial(3,6)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- factorial(5,2)."));
         }
@@ -211,7 +212,7 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("factorial(0,F,F)."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("factorial(N,A,F) :- N > 0, A1 is N * A, N1 is N - 1, factorial(N1,A1,F)."));
 
-            Assert.AreEqual("F = 120\r\n" + satisfied, globalInfo.ProcessInputString("?- factorial(5,1,F)."));
+            Assert.AreEqual("F = 120" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- factorial(5,1,F)."));
         }
 
         [Test]
@@ -220,15 +221,15 @@ namespace Inference.Tests.Interpreter.Prolog
             // See Fisher, section 2.3
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("foo(7, 13)."));
 
-            //Assert.AreEqual("X = 7, _ = _\r\n" + satisfied, globalInfo.ProcessInputString("?- foo(X, _), print(X, _)."));
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- foo(X, _)."));
+			//Assert.AreEqual("X = 7, _ = _" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- foo(X, _), print(X, _)."));
+			Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- foo(X, _)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- foo(X, _), write(_).")); // Fails because _ is not bound.
         }
 
         [Test]
         public void WriteTest()
         {
-            Assert.AreEqual("This is\r\nsome text.\r\n" + satisfied, globalInfo.ProcessInputString("?- write('This is'), nl, write('some text.')."));
+            Assert.AreEqual("This is" + this.lineEnd + "some text." + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- write('This is'), nl, write('some text.')."));
         }
 
 #if DEAD_CODE
@@ -262,26 +263,26 @@ namespace Inference.Tests.Interpreter.Prolog
         public void AssertTest()
         {
             // 1
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- assert(foo(7)), foo(X)."));
+            Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- assert(foo(7)), foo(X)."));
 
             // 2
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("bar(13)."));
-            Assert.AreEqual("X = 13\r\n" + satisfied, globalInfo.ProcessInputString("?- assert((bat(Y) :- bar(Y))), bat(X)."));
+            Assert.AreEqual("X = 13" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- assert((bat(Y) :- bar(Y))), bat(X)."));
 
             // 3
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- assert((X :- Y, Z(W)))."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- assert((X(W) :- Y, Z(W)))."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("Y."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("Z(7)."));
-            Assert.AreEqual("W = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- X(W)."));
+            Assert.AreEqual("W = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X(W)."));
         }
 
         [Test]
         public void RetractTest()
         {
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("foo(7)."));
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- foo(X)."));
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- retract(foo(X))."));
+            Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- foo(X)."));
+            Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- retract(foo(X))."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- foo(X)."));
 
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("bar(13)."));
@@ -407,11 +408,11 @@ namespace Inference.Tests.Interpreter.Prolog
 
             globalInfo.FindAllSolutions();
 
-            Assert.AreEqual(@"X = 2;
-X = 3;
-X = 5;
-X = 7;
-" + notSatisfied, globalInfo.ProcessInputString("?- member(X, [2, 3, 5, 7])."));
+            Assert.AreEqual(@"X = 2;" + lineEnd +
+				"X = 3;" + lineEnd +
+				"X = 5;" + lineEnd +
+				"X = 7;" + lineEnd +
+				notSatisfied, globalInfo.ProcessInputString("?- member(X, [2, 3, 5, 7])."));
         }
 
         [Test]
@@ -420,7 +421,7 @@ X = 7;
             // ThAW 2014/03/28 : I added brackets around sequences because without them, ?- X = [(1, 2), (3, 4)], print(X). yielded [1, 2, 3, 4],
             // which was misleading.
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("foo((1, 2, 3, 4))."));
-            Assert.AreEqual("H = 1, T = (2, 3, 4)\r\n" + satisfied, globalInfo.ProcessInputString("?- foo((H, T))."));
+            Assert.AreEqual("H = 1, T = (2, 3, 4)" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- foo((H, T))."));
 
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("equal(X, X)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- equal((a), a)."));
@@ -429,22 +430,22 @@ X = 7;
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- bar((H, T))."));
 
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("baz((1, 2, 3, 4, 5))."));
-            Assert.AreEqual("A = 1, B = 2, C = (3, 4, 5)\r\n" + satisfied, globalInfo.ProcessInputString("?- baz((A, B, C))."));
+            Assert.AreEqual("A = 1, B = 2, C = (3, 4, 5)" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- baz((A, B, C))."));
 
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("sequence_append((X,R),S,(X,T)) :- !, sequence_append(R,S,T)."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("sequence_append((X),S,(X,S))."));
-            Assert.AreEqual("S = (1, 2, 3, a, b, c, d)\r\n" + satisfied, globalInfo.ProcessInputString("?- sequence_append((1,2,3),(a,b,c,d),S)."));
+            Assert.AreEqual("S = (1, 2, 3, a, b, c, d)" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- sequence_append((1,2,3),(a,b,c,d),S)."));
         }
 
         [Test]
         public void ArithmeticExpressionTest()
         {
-            Assert.AreEqual("X = 16\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 5 * 3 + 4 / 2 - 1."));
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 10 - 2 - 1."));
-            Assert.AreEqual("X = 25\r\n" + satisfied, globalInfo.ProcessInputString("?- X is (2 + 3) * 5."));
-            Assert.AreEqual("X = 26\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 5 * (2 + 3) + 1."));
-            Assert.AreEqual("X = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- X is mod(29, 7) + mod(11, 3)."));
-            Assert.AreEqual("X = 5\r\n" + satisfied, globalInfo.ProcessInputString("?- X is (((1 + 1) + 1) + 1) + 1."));
+            Assert.AreEqual("X = 16" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 5 * 3 + 4 / 2 - 1."));
+            Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 10 - 2 - 1."));
+            Assert.AreEqual("X = 25" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is (2 + 3) * 5."));
+            Assert.AreEqual("X = 26" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 5 * (2 + 3) + 1."));
+            Assert.AreEqual("X = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is mod(29, 7) + mod(11, 3)."));
+            Assert.AreEqual("X = 5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is (((1 + 1) + 1) + 1) + 1."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- 5 is (((1 + 1) + 1) + 1) + 1."));
         }
 
@@ -471,15 +472,15 @@ find_regions([[X,Y]|S], R,A) :-
         (member(Y,R) -> find_regions(S,R,A) : find_regions(S,[Y|R],A)) :
            (member(Y,R) -> find_regions(S,[X|R],A) : find_regions(S,[X,Y|R],A) ) )."));
 
-            Assert.AreEqual("R = [5, 4, 3, 1, 2]\r\n" + satisfied,
+            Assert.AreEqual("R = [5, 4, 3, 1, 2]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- find_regions([[1,2],[1,3],[1,4],[1,5],[2,3],[2,4],[3,4],[4,5]],[],R)."));
         }
 
         [Test]
         public void UnificationOperatorTest() // Test the = (unification) infix operator.  The LHS may be a functor only if the LL(1) grammar is used.
         {
-            Assert.AreEqual("X = [1, 2, 3]\r\n" + satisfied, globalInfo.ProcessInputString("?- X = [1, 2, 3]."));
-            Assert.AreEqual("X = t\r\n" + satisfied, globalInfo.ProcessInputString("?- mia(X) = mia(t)."));
+            Assert.AreEqual("X = [1, 2, 3]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = [1, 2, 3]."));
+            Assert.AreEqual("X = t" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- mia(X) = mia(t)."));
         }
 
         [Test]
@@ -487,14 +488,14 @@ find_regions([[X,Y]|S], R,A) :-
         {
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- 7 == 7."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- 7 == 13."));
-            Assert.AreEqual("X = [1, 2, 3]\r\n" + satisfied, globalInfo.ProcessInputString("?- X = [1, 2, 3], X == [1, 2, 3]."));
+            Assert.AreEqual("X = [1, 2, 3]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = [1, 2, 3], X == [1, 2, 3]."));
 #if DEAD_CODE
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- X == X.")); // X is unbound.
 #else
             // See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse37
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- X == X."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- X == Y."));
-            Assert.AreEqual("X = Y\r\n" + satisfied, globalInfo.ProcessInputString("?- X = Y, X == Y."));
+            Assert.AreEqual("X = Y" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = Y, X == Y."));
 #endif
         }
 
@@ -602,7 +603,7 @@ color(Map,Colors,Coloring) :-
         find_regions(Map,[],Regions),
         color_all(Regions,Colors,Coloring,Map,[])."));
 
-            Assert.AreEqual("Coloring = [[5, red], [4, green], [3, red], [1, blue], [2, yellow]]\r\n" + satisfied,
+            Assert.AreEqual("Coloring = [[5, red], [4, green], [3, red], [1, blue], [2, yellow]]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString(@"?- color([[1, 2], [1, 3], [1, 4], [1, 5], [2, 3], [2, 4], [3, 4], [4, 5]],
                     [red, green, blue, yellow], Coloring)."));
         }
@@ -643,19 +644,19 @@ color(Map,Colors,Coloring) :-
             globalInfo.LoadPreset("append");
             globalInfo.FindAllSolutions();
 
-            Assert.AreEqual(@"X = [], Y = [2, 3, 5, 7];
-X = [2], Y = [3, 5, 7];
-X = [2, 3], Y = [5, 7];
-X = [2, 3, 5], Y = [7];
-X = [2, 3, 5, 7], Y = [];
-" + notSatisfied, globalInfo.ProcessInputString("?- append(X, Y, [2, 3, 5, 7])."));
+            Assert.AreEqual(@"X = [], Y = [2, 3, 5, 7];" + this.lineEnd +
+				"X = [2], Y = [3, 5, 7];" + this.lineEnd +
+				"X = [2, 3], Y = [5, 7];" + this.lineEnd +
+				"X = [2, 3, 5], Y = [7];" + this.lineEnd +
+				"X = [2, 3, 5, 7], Y = [];" + this.lineEnd +
+				notSatisfied, globalInfo.ProcessInputString(" ?- append(X, Y, [2, 3, 5, 7])."));
         }
 
         [Test]
         public void ArithExprAsGeneralExprTest() // 2014/03/24; test the usage of an arithmetic expression as a general expression.
         {
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("foo(1 + 1).")); // Essentially foo(+(1, 1)).
-            Assert.AreEqual("X = +(1, 1), Y = 2\r\n" + satisfied, globalInfo.ProcessInputString("?- foo(X), Y is X."));
+            Assert.AreEqual("X = +(1, 1), Y = 2" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- foo(X), Y is X."));
         }
 
         [Test]
@@ -696,7 +697,7 @@ zebra(N) :-
   Constraints3And4(Street),
   member([_, N, zebra], Street). % This used to fail because _ was being renamed to a bound variable, for which an incorrect value was then substituted."));
 
-            Assert.AreEqual("N = japanese\r\n" + satisfied, globalInfo.ProcessInputString("?- zebra(N)."));
+            Assert.AreEqual("N = japanese" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- zebra(N)."));
         }
 
         [Test]
@@ -743,8 +744,8 @@ zebra(N) :-
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("toptail(InList,OutList) :- append([_],OutList,X), append(X,[_],InList)."));
 
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- toptail([a], T)."));
-            Assert.AreEqual("T = []\r\n" + satisfied, globalInfo.ProcessInputString("?- toptail([a, b], T)."));
-            Assert.AreEqual("T = [b]\r\n" + satisfied, globalInfo.ProcessInputString("?- toptail([a, b, c], T)."));
+            Assert.AreEqual("T = []" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- toptail([a, b], T)."));
+            Assert.AreEqual("T = [b]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- toptail([a, b, c], T)."));
         }
 
         [Test]
@@ -835,27 +836,27 @@ zebra(N) :-
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- s([woman, a, woman, man, a, loves], [])."));
 
             globalInfo.FindAllSolutions();
-            Assert.AreEqual(@"X = [the, woman, loves, the, woman];
-X = [the, woman, loves, the, man];
-X = [the, woman, loves, a, woman];
-X = [the, woman, loves, a, man];
-X = [the, woman, loves];
-X = [the, man, loves, the, woman];
-X = [the, man, loves, the, man];
-X = [the, man, loves, a, woman];
-X = [the, man, loves, a, man];
-X = [the, man, loves];
-X = [a, woman, loves, the, woman];
-X = [a, woman, loves, the, man];
-X = [a, woman, loves, a, woman];
-X = [a, woman, loves, a, man];
-X = [a, woman, loves];
-X = [a, man, loves, the, woman];
-X = [a, man, loves, the, man];
-X = [a, man, loves, a, woman];
-X = [a, man, loves, a, man];
-X = [a, man, loves];
-" + notSatisfied, globalInfo.ProcessInputString("?- s(X, []).")); // Generate all 20 sentences in the language.
+            Assert.AreEqual(@"X = [the, woman, loves, the, woman];" + lineEnd +
+				"X = [the, woman, loves, the, man];" + lineEnd +
+				"X = [the, woman, loves, a, woman];" + lineEnd +
+				"X = [the, woman, loves, a, man];" + lineEnd +
+				"X = [the, woman, loves];" + lineEnd +
+				"X = [the, man, loves, the, woman];" + lineEnd +
+				"X = [the, man, loves, the, man];" + lineEnd +
+				"X = [the, man, loves, a, woman];" + lineEnd +
+				"X = [the, man, loves, a, man];" + lineEnd +
+				"X = [the, man, loves];" + lineEnd +
+				"X = [a, woman, loves, the, woman];" + lineEnd +
+				"X = [a, woman, loves, the, man];" + lineEnd +
+				"X = [a, woman, loves, a, woman];" + lineEnd +
+				"X = [a, woman, loves, a, man];" + lineEnd +
+				"X = [a, woman, loves];" + lineEnd +
+				"X = [a, man, loves, the, woman];" + lineEnd +
+				"X = [a, man, loves, the, man];" + lineEnd +
+				"X = [a, man, loves, a, woman];" + lineEnd +
+				"X = [a, man, loves, a, man];" + lineEnd +
+				"X = [a, man, loves];" + lineEnd +
+				notSatisfied, globalInfo.ProcessInputString(" ?- s(X, []).")); // Generate all 20 sentences in the language.
         }
 
         [Test]
@@ -878,27 +879,27 @@ X = [a, man, loves];
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- s([woman, a, woman, man, a, loves], [])."));
 
             globalInfo.FindAllSolutions();
-            Assert.AreEqual(@"X = [the, woman, loves, the, woman];
-X = [the, woman, loves, the, man];
-X = [the, woman, loves, a, woman];
-X = [the, woman, loves, a, man];
-X = [the, woman, loves];
-X = [the, man, loves, the, woman];
-X = [the, man, loves, the, man];
-X = [the, man, loves, a, woman];
-X = [the, man, loves, a, man];
-X = [the, man, loves];
-X = [a, woman, loves, the, woman];
-X = [a, woman, loves, the, man];
-X = [a, woman, loves, a, woman];
-X = [a, woman, loves, a, man];
-X = [a, woman, loves];
-X = [a, man, loves, the, woman];
-X = [a, man, loves, the, man];
-X = [a, man, loves, a, woman];
-X = [a, man, loves, a, man];
-X = [a, man, loves];
-" + notSatisfied, globalInfo.ProcessInputString("?- s(X, []).")); // Generate all 20 sentences in the language.
+            Assert.AreEqual(@"X = [the, woman, loves, the, woman];" + lineEnd +
+				"X = [the, woman, loves, the, man];" + lineEnd +
+				"X = [the, woman, loves, a, woman];" + lineEnd +
+				"X = [the, woman, loves, a, man];" + lineEnd +
+				"X = [the, woman, loves];" + lineEnd +
+				"X = [the, man, loves, the, woman];" + lineEnd +
+				"X = [the, man, loves, the, man];" + lineEnd +
+				"X = [the, man, loves, a, woman];" + lineEnd +
+				"X = [the, man, loves, a, man];" + lineEnd +
+				"X = [the, man, loves];" + lineEnd +
+				"X = [a, woman, loves, the, woman];" + lineEnd +
+				"X = [a, woman, loves, the, man];" + lineEnd +
+				"X = [a, woman, loves, a, woman];" + lineEnd +
+				"X = [a, woman, loves, a, man];" + lineEnd +
+				"X = [a, woman, loves];" + lineEnd +
+				"X = [a, man, loves, the, woman];" + lineEnd +
+				"X = [a, man, loves, the, man];" + lineEnd +
+				"X = [a, man, loves, a, woman];" + lineEnd +
+				"X = [a, man, loves, a, man];" + lineEnd +
+				"X = [a, man, loves];" + lineEnd +
+				notSatisfied, globalInfo.ProcessInputString("?- s(X, []).")); // Generate all 20 sentences in the language.
         }
 
         [Test]
@@ -949,8 +950,8 @@ X = [a, man, loves];
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("n(n(man))      -->  [man]."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("v(v(loves))  -->  [loves]."));
 
-            Assert.AreEqual(@"T = s(np(det(a), n(woman)), vp(v(loves), np(det(a), n(man))))
-" + satisfied, globalInfo.ProcessInputString("?- s(T, [a, woman, loves, a, man], [])."));
+            Assert.AreEqual(@"T = s(np(det(a), n(woman)), vp(v(loves), np(det(a), n(man))))" + lineEnd +
+satisfied, globalInfo.ProcessInputString(" ?- s(T, [a, woman, loves, a, man], [])."));
         }
 
         [Test]
@@ -966,14 +967,14 @@ X = [a, man, loves];
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("cblock(0)  -->  []."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("cblock(succ(Count))  -->  [c],cblock(Count)."));
 
-            Assert.AreEqual(@"L = []
-" + satisfied, globalInfo.ProcessInputString("?- s(0, L, [])."));
-            Assert.AreEqual(@"L = [a, b, c]
-" + satisfied, globalInfo.ProcessInputString("?- s(succ(0), L, [])."));
-            Assert.AreEqual(@"L = [a, a, b, b, c, c]
-" + satisfied, globalInfo.ProcessInputString("?- s(succ(succ(0)), L, [])."));
-            Assert.AreEqual(@"L = [a, a, a, b, b, b, c, c, c]
-" + satisfied, globalInfo.ProcessInputString("?- s(succ(succ(succ(0))), L, [])."));
+            Assert.AreEqual(@"L = []" + lineEnd +
+satisfied, globalInfo.ProcessInputString(" ?- s(0, L, [])."));
+            Assert.AreEqual(@"L = [a, b, c]" + lineEnd +
+satisfied, globalInfo.ProcessInputString(" ?- s(succ(0), L, [])."));
+            Assert.AreEqual(@"L = [a, a, b, b, c, c]" + lineEnd +
+satisfied, globalInfo.ProcessInputString(" ?- s(succ(succ(0)), L, [])."));
+            Assert.AreEqual(@"L = [a, a, a, b, b, b, c, c, c]" + lineEnd +
+satisfied, globalInfo.ProcessInputString(" ?- s(succ(succ(succ(0))), L, [])."));
         }
 
         [Test]
@@ -999,65 +1000,65 @@ X = [a, man, loves];
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- s([woman, a, woman, man, a, loves], [])."));
 
             globalInfo.FindAllSolutions();
-            Assert.AreEqual(@"X = [the, woman, loves, the, woman];
-X = [the, woman, loves, the, man];
-X = [the, woman, loves, a, woman];
-X = [the, woman, loves, a, man];
-X = [the, woman, loves];
-X = [the, man, loves, the, woman];
-X = [the, man, loves, the, man];
-X = [the, man, loves, a, woman];
-X = [the, man, loves, a, man];
-X = [the, man, loves];
-X = [a, woman, loves, the, woman];
-X = [a, woman, loves, the, man];
-X = [a, woman, loves, a, woman];
-X = [a, woman, loves, a, man];
-X = [a, woman, loves];
-X = [a, man, loves, the, woman];
-X = [a, man, loves, the, man];
-X = [a, man, loves, a, woman];
-X = [a, man, loves, a, man];
-X = [a, man, loves];
-" + notSatisfied, globalInfo.ProcessInputString("?- s(X, []).")); // Generate all 20 sentences in the language.
+            Assert.AreEqual(@"X = [the, woman, loves, the, woman];" + lineEnd +
+				"X = [the, woman, loves, the, man];" + lineEnd +
+				"X = [the, woman, loves, a, woman];" + lineEnd +
+				"X = [the, woman, loves, a, man];" + lineEnd +
+				"X = [the, woman, loves];" + lineEnd +
+				"X = [the, man, loves, the, woman];" + lineEnd +
+				"X = [the, man, loves, the, man];" + lineEnd +
+				"X = [the, man, loves, a, woman];" + lineEnd +
+				"X = [the, man, loves, a, man];" + lineEnd +
+				"X = [the, man, loves];" + lineEnd +
+				"X = [a, woman, loves, the, woman];" + lineEnd +
+				"X = [a, woman, loves, the, man];" + lineEnd +
+				"X = [a, woman, loves, a, woman];" + lineEnd +
+				"X = [a, woman, loves, a, man];" + lineEnd +
+				"X = [a, woman, loves];" + lineEnd +
+				"X = [a, man, loves, the, woman];" + lineEnd +
+				"X = [a, man, loves, the, man];" + lineEnd +
+				"X = [a, man, loves, a, woman];" + lineEnd +
+				"X = [a, man, loves, a, man];" + lineEnd +
+				"X = [a, man, loves];" + lineEnd +
+				notSatisfied, globalInfo.ProcessInputString("?- s(X, []).")); // Generate all 20 sentences in the language.
         }
 
         [Test]
         public void UnaryMinusTest() // 2014/04/02
         {
-            Assert.AreEqual("X = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- X is - -3."));
-            Assert.AreEqual("X = 6\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2 * - -3."));
-            Assert.AreEqual("X = 5\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2 + - -3."));
-            Assert.AreEqual("X = 4\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 5 + - mod(1, 2)."));
-            Assert.AreEqual("X = -1\r\n" + satisfied, globalInfo.ProcessInputString("?- X is - mod(1, 2)."));
-            Assert.AreEqual("X = -5\r\n" + satisfied, globalInfo.ProcessInputString("?- X is - (2 + 3)."));
-            Assert.AreEqual("X = 4\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 9 + - (2 + 3)."));
-            Assert.AreEqual("X = 12\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 13 + - -(3, 2)."));
-            Assert.AreEqual("X = 8\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 13 + - +(3, 2)."));
-            Assert.AreEqual("X = 12\r\n" + satisfied, globalInfo.ProcessInputString("?- X is - -(3, 2) + 13."));
-            Assert.AreEqual("X = 8\r\n" + satisfied, globalInfo.ProcessInputString("?- X is - +(3, 2) + 13."));
+            Assert.AreEqual("X = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is - -3."));
+            Assert.AreEqual("X = 6" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2 * - -3."));
+            Assert.AreEqual("X = 5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2 + - -3."));
+            Assert.AreEqual("X = 4" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 5 + - mod(1, 2)."));
+            Assert.AreEqual("X = -1" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is - mod(1, 2)."));
+            Assert.AreEqual("X = -5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is - (2 + 3)."));
+            Assert.AreEqual("X = 4" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 9 + - (2 + 3)."));
+            Assert.AreEqual("X = 12" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 13 + - -(3, 2)."));
+            Assert.AreEqual("X = 8" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 13 + - +(3, 2)."));
+            Assert.AreEqual("X = 12" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is - -(3, 2) + 13."));
+            Assert.AreEqual("X = 8" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is - +(3, 2) + 13."));
 
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("calculate(X, Y) :- Y is X."));
-            Assert.AreEqual("Y = 12\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(- -(3, 2) + 13, Y)."));
-            Assert.AreEqual("Y = 8\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(- +(3, 2) + 13, Y)."));
-            Assert.AreEqual("Y = 19\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(7 + - -(3, 2) + 13, Y)."));
-            Assert.AreEqual("Y = 15\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(7 + - +(3, 2) + 13, Y)."));
-            Assert.AreEqual("Z = 7, Y = 19\r\n" + satisfied, globalInfo.ProcessInputString("?- Z = 7, calculate(Z + - -(3, 2) + 13, Y)."));
-            Assert.AreEqual("Z = 7, Y = 15\r\n" + satisfied, globalInfo.ProcessInputString("?- Z = 7, calculate(Z + - +(3, 2) + 13, Y)."));
-            Assert.AreEqual("Y = -14\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(-(-(3, 2) + 13), Y)."));
-            Assert.AreEqual("Y = -18\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(-(+(3, 2) + 13), Y)."));
-            Assert.AreEqual("Y = 24\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate((- -(3, 2) + 13) * 2, Y)."));
-            Assert.AreEqual("Y = 16\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate((- +(3, 2) + 13) * 2, Y)."));
-            Assert.AreEqual("Y = -24\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(-(- -(3, 2) + 13) * 2, Y)."));
-            Assert.AreEqual("Y = -16\r\n" + satisfied, globalInfo.ProcessInputString("?- calculate(-(- +(3, 2) + 13) * 2, Y)."));
+            Assert.AreEqual("Y = 12" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(- -(3, 2) + 13, Y)."));
+            Assert.AreEqual("Y = 8" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(- +(3, 2) + 13, Y)."));
+            Assert.AreEqual("Y = 19" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(7 + - -(3, 2) + 13, Y)."));
+            Assert.AreEqual("Y = 15" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(7 + - +(3, 2) + 13, Y)."));
+            Assert.AreEqual("Z = 7, Y = 19" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- Z = 7, calculate(Z + - -(3, 2) + 13, Y)."));
+            Assert.AreEqual("Z = 7, Y = 15" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- Z = 7, calculate(Z + - +(3, 2) + 13, Y)."));
+            Assert.AreEqual("Y = -14" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(-(-(3, 2) + 13), Y)."));
+            Assert.AreEqual("Y = -18" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(-(+(3, 2) + 13), Y)."));
+            Assert.AreEqual("Y = 24" + this.lineEnd + satisfied, globalInfo.ProcessInputString(" ?- calculate((- -(3, 2) + 13) * 2, Y)."));
+            Assert.AreEqual("Y = 16" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate((- +(3, 2) + 13) * 2, Y)."));
+            Assert.AreEqual("Y = -24" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(-(- -(3, 2) + 13) * 2, Y)."));
+            Assert.AreEqual("Y = -16" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- calculate(-(- +(3, 2) + 13) * 2, Y)."));
 
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- - 2 < -1."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- - 2 < -2."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- - 2 - 1 < -2."));
 
-            Assert.AreEqual("X = 2\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2, - X < -1."));
+            Assert.AreEqual("X = 2" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2, - X < -1."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- X is 2, - X < -2."));
-            Assert.AreEqual("X = 2\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2, - X - 1 < -2."));
+            Assert.AreEqual("X = 2" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2, - X - 1 < -2."));
 
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- - mod(2, 3) < -1."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- - mod(2, 3) < -2."));
@@ -1071,21 +1072,21 @@ X = [a, man, loves];
         [Test]
         public void PrefixListNotationTest()
         {
-            Assert.AreEqual("X = []\r\n" + satisfied, globalInfo.ProcessInputString("?- X = []."));
-            Assert.AreEqual("X = [1]\r\n" + satisfied, globalInfo.ProcessInputString("?- X = .(1, [])."));
-            Assert.AreEqual("X = [1, 2, 3]\r\n" + satisfied, globalInfo.ProcessInputString("?- X = .(1, [2, 3])."));
-            Assert.AreEqual("X = [1, 2, 3]\r\n" + satisfied, globalInfo.ProcessInputString("?- .(1, [2, 3]) = X."));
-            Assert.AreEqual("X = 1, Y = 2\r\n" + satisfied, globalInfo.ProcessInputString("?- .(1, [2, 3]) = [X, Y | _]."));
+            Assert.AreEqual("X = []" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = []."));
+            Assert.AreEqual("X = [1]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = .(1, [])."));
+            Assert.AreEqual("X = [1, 2, 3]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = .(1, [2, 3])."));
+            Assert.AreEqual("X = [1, 2, 3]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- .(1, [2, 3]) = X."));
+            Assert.AreEqual("X = 1, Y = 2" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- .(1, [2, 3]) = [X, Y | _]."));
         }
 
         [Test]
         public void SingleQuotedIdentifierTest()
         {
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- a == 'a'."));
-            Assert.AreEqual("X = []\r\n" + satisfied, globalInfo.ProcessInputString("?- X = '[]'."));
-            Assert.AreEqual("X = []\r\n" + satisfied, globalInfo.ProcessInputString("?- '[]' = X."));
-            Assert.AreEqual("X = [1]\r\n" + satisfied, globalInfo.ProcessInputString("?- X = '.'(1, '[]')."));
-            Assert.AreEqual("X = [1]\r\n" + satisfied, globalInfo.ProcessInputString("?- '.'(1, '[]') = X."));
+            Assert.AreEqual("X = []" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = '[]'."));
+            Assert.AreEqual("X = []" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- '[]' = X."));
+            Assert.AreEqual("X = [1]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X = '.'(1, '[]')."));
+            Assert.AreEqual("X = [1]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- '.'(1, '[]') = X."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString(@"?- Vicky \== 'Vicky'."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString(@"?- atom('Vicky').")); // Vicky is a variable; 'Vicky' is a functor (atom)
         }
@@ -1179,8 +1180,8 @@ X = [a, man, loves];
         [Test]
         public void PrefixNonArithmeticOperatorTest() // 2014/04/04
         {
-            Assert.AreEqual("X = foo\r\n" + satisfied, globalInfo.ProcessInputString("?- =(X, foo)."));
-            Assert.AreEqual("X = +(2, 3), Y = 5\r\n" + satisfied, globalInfo.ProcessInputString("?- =(2 + 3, X), is(Y, X)."));
+            Assert.AreEqual("X = foo" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- =(X, foo)."));
+            Assert.AreEqual("X = +(2, 3), Y = 5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- =(2 + 3, X), is(Y, X)."));
         }
 
         [Test]
@@ -1197,13 +1198,13 @@ X = [a, man, loves];
         public void Functor3Test() // 2014/04/05.  See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse39
         {
             // This test must come first.
-            Assert.AreEqual("T = f(Var1, Var2, Var3)\r\n" + satisfied, globalInfo.ProcessInputString(@"?- functor(T, f, 3)."));
+            Assert.AreEqual("T = f(Var1, Var2, Var3)" + this.lineEnd + satisfied, globalInfo.ProcessInputString(@"?- functor(T, f, 3)."));
 
-            Assert.AreEqual("F = f, A = 2\r\n" + satisfied, globalInfo.ProcessInputString(@"?- functor(f(a, b), F, A)."));
-            Assert.AreEqual("X = ., Y = 2\r\n" + satisfied, globalInfo.ProcessInputString(@"?- functor([a, b, c], X, Y)."));
-            Assert.AreEqual("F = mia, A = 0\r\n" + satisfied, globalInfo.ProcessInputString(@"?- functor(mia, F, A)."));
-            Assert.AreEqual("F = 8, A = 0\r\n" + satisfied, globalInfo.ProcessInputString(@"?- functor(8, F, A)."));
-            Assert.AreEqual("F = 3.25, A = 0\r\n" + satisfied, globalInfo.ProcessInputString(@"?- functor(3.25, F, A)."));
+            Assert.AreEqual("F = f, A = 2" + this.lineEnd + satisfied, globalInfo.ProcessInputString(@"?- functor(f(a, b), F, A)."));
+            Assert.AreEqual("X = ., Y = 2" + this.lineEnd + satisfied, globalInfo.ProcessInputString(@"?- functor([a, b, c], X, Y)."));
+            Assert.AreEqual("F = mia, A = 0" + this.lineEnd + satisfied, globalInfo.ProcessInputString(@"?- functor(mia, F, A)."));
+            Assert.AreEqual("F = 8, A = 0" + this.lineEnd + satisfied, globalInfo.ProcessInputString(@"?- functor(8, F, A)."));
+            Assert.AreEqual("F = 3.25, A = 0" + this.lineEnd + satisfied, globalInfo.ProcessInputString(@"?- functor(3.25, F, A)."));
             Assert.IsTrue(globalInfo.ProcessInputString(@"?- functor(T, f, 7).").EndsWith(satisfied));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString(@"?- functor(T, f, N)."));
 
@@ -1223,22 +1224,22 @@ X = [a, man, loves];
         [Test]
         public void Arg3Test() // 2014/04/05.  See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse39
         {
-            Assert.AreEqual("X = mia\r\n" + satisfied, globalInfo.ProcessInputString("?- arg(2, loves(vincent, mia), X)."));
-            Assert.AreEqual("X = mia\r\n" + satisfied, globalInfo.ProcessInputString("?- arg(2, loves(vincent, X), mia)."));
+            Assert.AreEqual("X = mia" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- arg(2, loves(vincent, mia), X)."));
+            Assert.AreEqual("X = mia" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- arg(2, loves(vincent, X), mia)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- arg(2, happy(yolanda), X). "));
         }
 
         [Test]
         public void UnivTest() // 2014/04/05.  See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse39
         {
-            Assert.AreEqual("X = [loves, vincent, mia]\r\n" + satisfied, globalInfo.ProcessInputString("?- =..(loves(vincent, mia), X)."));
+            Assert.AreEqual("X = [loves, vincent, mia]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- =..(loves(vincent, mia), X)."));
 
             // TODO 2014/04/05 : In order to remove the single quotes from around the univ operator, we would need a state-machine tokenizer : Done.
-            Assert.AreEqual("X = [cause, vincent, dead(zed)]\r\n" + satisfied, globalInfo.ProcessInputString("?- cause(vincent, dead(zed)) =.. X."));
-            Assert.AreEqual("X = a(b(c), d)\r\n" + satisfied, globalInfo.ProcessInputString("?- X =.. [a, b(c), d]."));
-            Assert.AreEqual("X = [footmassage, Y, mia]\r\n" + satisfied, globalInfo.ProcessInputString("?- footmassage(Y, mia) =.. X."));
-            Assert.AreEqual("X = [7]\r\n" + satisfied, globalInfo.ProcessInputString("?- 7 =.. X."));
-            Assert.AreEqual("X = [7.5]\r\n" + satisfied, globalInfo.ProcessInputString("?- 7.5 =.. X."));
+            Assert.AreEqual("X = [cause, vincent, dead(zed)]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- cause(vincent, dead(zed)) =.. X."));
+            Assert.AreEqual("X = a(b(c), d)" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X =.. [a, b(c), d]."));
+            Assert.AreEqual("X = [footmassage, Y, mia]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- footmassage(Y, mia) =.. X."));
+            Assert.AreEqual("X = [7]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- 7 =.. X."));
+            Assert.AreEqual("X = [7.5]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- 7.5 =.. X."));
         }
 
         [Test]
@@ -1262,26 +1263,26 @@ X = [a, man, loves];
         public void FSMTokenizerTest() // 2014/04/09.  Adapted from UnivTest.  See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse39
         {
             // In order to remove the single quotes from around the univ operator, we use a state-machine tokenizer.
-            Assert.AreEqual("X = [loves, vincent, mia]\r\n" + satisfied, globalInfo.ProcessInputString("?- =..(loves(vincent, mia), X)."));
+            Assert.AreEqual("X = [loves, vincent, mia]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- =..(loves(vincent, mia), X)."));
 
-            Assert.AreEqual("X = [cause, vincent, dead(zed)]\r\n" + satisfied,
+            Assert.AreEqual("X = [cause, vincent, dead(zed)]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- cause(vincent, dead(zed)) =.. X."));
-            Assert.AreEqual("X = a(b(c), d)\r\n" + satisfied,
+            Assert.AreEqual("X = a(b(c), d)" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- X =.. [a, b(c), d]."));
-            Assert.AreEqual("X = [footmassage, Y, mia]\r\n" + satisfied,
+            Assert.AreEqual("X = [footmassage, Y, mia]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- footmassage(Y, mia) =.. X."));
         }
 
         [Test]
         public void AtomCodesTest() // 2014/04/09.  See http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse39
         {
-            Assert.AreEqual("S = [86, 105, 99, 107, 121]\r\n" + satisfied, globalInfo.ProcessInputString("?- S = \"Vicky\"."));
-            Assert.AreEqual("X = [118, 105, 99, 107, 121]\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_codes(vicky, X)."));
-            Assert.AreEqual("X = [86, 105, 99, 107, 121]\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_codes('Vicky', X)."));
-            Assert.AreEqual("X = [86, 105, 99, 107, 121, 32, 80, 111, 108, 108, 97, 114, 100]\r\n" + satisfied,
+            Assert.AreEqual("S = [86, 105, 99, 107, 121]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- S = \"Vicky\"."));
+            Assert.AreEqual("X = [118, 105, 99, 107, 121]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_codes(vicky, X)."));
+            Assert.AreEqual("X = [86, 105, 99, 107, 121]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_codes('Vicky', X)."));
+            Assert.AreEqual("X = [86, 105, 99, 107, 121, 32, 80, 111, 108, 108, 97, 114, 100]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- atom_codes('Vicky Pollard', X)."));
-            Assert.AreEqual("X = 107\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_codes(vicky, [118, 105, 99, X, 121])."));
-            Assert.AreEqual("X = vicky\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_codes(X, [118, 105, 99, 107, 121])."));
+            Assert.AreEqual("X = 107" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_codes(vicky, [118, 105, 99, X, 121])."));
+            Assert.AreEqual("X = vicky" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_codes(X, [118, 105, 99, 107, 121])."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- atom_codes(vicky, [118, 105, 99, 107, 121])."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_codes(X, [118, 105, -1, 107, 121])."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_codes(X, [])."));
@@ -1289,46 +1290,46 @@ X = [a, man, loves];
 
             globalInfo.LoadPreset("append");
 
-            Assert.AreEqual("X = [97, 98, 99], L = [97, 98, 99, 97, 98, 99], N = abcabc\r\n" + satisfied,
+            Assert.AreEqual("X = [97, 98, 99], L = [97, 98, 99, 97, 98, 99], N = abcabc" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- atom_codes(abc, X), append(X, X, L), atom_codes(N, L)."));
         }
 
         [Test]
         public void NumberCodesTest() // 2014/04/09.  See http://www.complang.tuwien.ac.at/SWI-Prolog/Manual/manipatom.html
         {
-            Assert.AreEqual("L = [50, 51, 53, 55]\r\n" + satisfied, globalInfo.ProcessInputString("?- number_codes(2357, L)."));
+            Assert.AreEqual("L = [50, 51, 53, 55]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_codes(2357, L)."));
             // atom_codes, number_codes, and name can all convert any atomic value to a list of codes.
             //Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_codes(foo, L)."));
-            Assert.AreEqual("N = 2357\r\n" + satisfied, globalInfo.ProcessInputString("?- number_codes(N, [50, 51, 53, 55]), integer(N)."));
+            Assert.AreEqual("N = 2357" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_codes(N, [50, 51, 53, 55]), integer(N)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_codes(N, [50, 51, 65, 55])."));
-            Assert.AreEqual("X = 53\r\n" + satisfied, globalInfo.ProcessInputString("?- number_codes(2357, [50, 51, X, 55])."));
+            Assert.AreEqual("X = 53" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_codes(2357, [50, 51, X, 55])."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- number_codes(2357, [50, 51, 53, 55])."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_codes(N, L)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_codes(N, [])."));
 
             // Floating-point number support:
-            Assert.AreEqual("L = [49, 46, 48]\r\n" + satisfied, globalInfo.ProcessInputString("?- number_codes(1.0, L)."));
-            Assert.AreEqual("N = 1.0\r\n" + satisfied, globalInfo.ProcessInputString("?- number_codes(N, [49, 46, 48]), float(N)."));
-            Assert.AreEqual("X = 46\r\n" + satisfied, globalInfo.ProcessInputString("?- number_codes(1.0, [49, X, 48])."));
+            Assert.AreEqual("L = [49, 46, 48]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_codes(1.0, L)."));
+            Assert.AreEqual("N = 1.0" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_codes(N, [49, 46, 48]), float(N)."));
+            Assert.AreEqual("X = 46" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_codes(1.0, [49, X, 48])."));
         }
 
         [Test]
         public void NameTest() // 2014/04/09.  See http://www.complang.tuwien.ac.at/SWI-Prolog/Manual/manipatom.html
         {
-            Assert.AreEqual("X = [118, 105, 99, 107, 121]\r\n" + satisfied, globalInfo.ProcessInputString("?- name(vicky, X)."));
-            Assert.AreEqual("L = [50, 51, 53, 55]\r\n" + satisfied, globalInfo.ProcessInputString("?- name(2357, L)."));
+            Assert.AreEqual("X = [118, 105, 99, 107, 121]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- name(vicky, X)."));
+            Assert.AreEqual("L = [50, 51, 53, 55]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- name(2357, L)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- name(vicky(7), X)."));
-            Assert.AreEqual("X = vicky\r\n" + satisfied, globalInfo.ProcessInputString("?- name(X, [118, 105, 99, 107, 121]), atom(X)."));
-            Assert.AreEqual("N = 2357\r\n" + satisfied, globalInfo.ProcessInputString("?- name(N, [50, 51, 53, 55]), integer(N)."));
+            Assert.AreEqual("X = vicky" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- name(X, [118, 105, 99, 107, 121]), atom(X)."));
+            Assert.AreEqual("N = 2357" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- name(N, [50, 51, 53, 55]), integer(N)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- name(X, [])."));
         }
 
         [Test]
         public void AtomCharsTest() // 2014/04/09.  See http://www.complang.tuwien.ac.at/SWI-Prolog/Manual/manipatom.html
         {
-            Assert.AreEqual("X = [v, i, c, k, y]\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_chars(vicky, X)."));
-            Assert.AreEqual("X = vicky\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_chars(X, [v, i, c, k, y])."));
-            Assert.AreEqual("X = k\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_chars(vicky, [v, i, c, X, y])."));
+            Assert.AreEqual("X = [v, i, c, k, y]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_chars(vicky, X)."));
+            Assert.AreEqual("X = vicky" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_chars(X, [v, i, c, k, y])."));
+            Assert.AreEqual("X = k" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_chars(vicky, [v, i, c, X, y])."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_chars(X, [])."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_chars(7, ['7'])."));
         }
@@ -1338,18 +1339,18 @@ X = [a, man, loves];
         {
             // We assume that atom_chars and number_chars can both convert any atomic value to a list of chars.  See NumberCodesTest().
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- number_chars(2357, ['2', '3', '5', '7'])."));
-            Assert.AreEqual("X = [2, 3, 5, 7]\r\n" + satisfied, globalInfo.ProcessInputString("?- number_chars(2357, X)."));
-            Assert.AreEqual("X = 2357\r\n" + satisfied, globalInfo.ProcessInputString("?- number_chars(X, ['2', '3', '5', '7']), integer(X)."));
-            Assert.AreEqual("X = 5\r\n" + satisfied, globalInfo.ProcessInputString("?- number_chars(2357, ['2', '3', X, '7']), atom(X)."));
+            Assert.AreEqual("X = [2, 3, 5, 7]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_chars(2357, X)."));
+            Assert.AreEqual("X = 2357" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_chars(X, ['2', '3', '5', '7']), integer(X)."));
+            Assert.AreEqual("X = 5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_chars(2357, ['2', '3', X, '7']), atom(X)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_chars(N, L)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_chars(X, ['2', '3', a, '7'])."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- number_chars(X, [])."));
 
             // Floating-point number support:
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- number_chars(1.0, ['1', '.', '0'])."));
-            Assert.AreEqual("L = [1, ., 0]\r\n" + satisfied, globalInfo.ProcessInputString("?- number_chars(1.0, L)."));
-            Assert.AreEqual("N = 1.0\r\n" + satisfied, globalInfo.ProcessInputString("?- number_chars(N, ['1', '.', '0']), float(N)."));
-            Assert.AreEqual("X = .\r\n" + satisfied, globalInfo.ProcessInputString("?- number_chars(1.0, ['1', X, '0'])."));
+            Assert.AreEqual("L = [1, ., 0]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_chars(1.0, L)."));
+            Assert.AreEqual("N = 1.0" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_chars(N, ['1', '.', '0']), float(N)."));
+            Assert.AreEqual("X = ." + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- number_chars(1.0, ['1', X, '0'])."));
 
         }
 
@@ -1357,8 +1358,8 @@ X = [a, man, loves];
         public void CharCodeTest() // 2014/04/10.  See http://www.complang.tuwien.ac.at/SWI-Prolog/Manual/manipatom.html
         {
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- char_code(a, 97)."));
-            Assert.AreEqual("N = 97\r\n" + satisfied, globalInfo.ProcessInputString("?- char_code(a, N)."));
-            Assert.AreEqual("X = a\r\n" + satisfied, globalInfo.ProcessInputString("?- char_code(X, 97)."));
+            Assert.AreEqual("N = 97" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- char_code(a, N)."));
+            Assert.AreEqual("X = a" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- char_code(X, 97)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- char_code(ab, 97)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- char_code(a, 65)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- char_code(X, N)."));
@@ -1373,7 +1374,7 @@ X = [a, man, loves];
 
             globalInfo.FindAllSolutions();
 
-            Assert.AreEqual("X = 1, Y = 1;\r\nX = 1, Y = 2;\r\n" + notSatisfied, globalInfo.ProcessInputString("?- p(X), !, p(Y)."));
+            Assert.AreEqual("X = 1, Y = 1;" + this.lineEnd + "X = 1, Y = 2;" + this.lineEnd + notSatisfied, globalInfo.ProcessInputString("?- p(X), !, p(Y)."));
         }
 
         [Test]
@@ -1385,15 +1386,15 @@ X = [a, man, loves];
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("maxRed(X, Y, Z) :- X =< Y, !, Y = Z."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("maxRed(X, Y, X)."));
 
-            Assert.AreEqual("X = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- maxGreen(2, 3, X)."));
-            Assert.AreEqual("X = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- maxGreen(3, 2, X)."));
+            Assert.AreEqual("X = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- maxGreen(2, 3, X)."));
+            Assert.AreEqual("X = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- maxGreen(3, 2, X)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- maxGreen(2, 3, 3)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- maxGreen(3, 2, 3)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- maxGreen(2, 3, 2)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- maxGreen(3, 2, 2)."));
 
-            Assert.AreEqual("X = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- maxRed(2, 3, X)."));
-            Assert.AreEqual("X = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- maxRed(3, 2, X)."));
+            Assert.AreEqual("X = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- maxRed(2, 3, X)."));
+            Assert.AreEqual("X = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- maxRed(3, 2, X)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- maxRed(2, 3, 3)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- maxRed(3, 2, 3)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- maxRed(2, 3, 2)."));
@@ -1403,11 +1404,11 @@ X = [a, man, loves];
         [Test]
         public void FloatingPointTest() // 2014/04/10
         {
-            Assert.AreEqual("X = 5\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2 + 3."));
-            Assert.AreEqual("X = 5.25\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2.25 + 3."));
-            Assert.AreEqual("X = 5.5\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2 + 3.5."));
-            Assert.AreEqual("X = 5.75\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2.25 + 3.5."));
-            Assert.AreEqual("X = 6.0\r\n" + satisfied, globalInfo.ProcessInputString("?- X is 2.25 + 3.75."));
+            Assert.AreEqual("X = 5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2 + 3."));
+            Assert.AreEqual("X = 5.25" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2.25 + 3."));
+            Assert.AreEqual("X = 5.5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2 + 3.5."));
+            Assert.AreEqual("X = 5.75" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2.25 + 3.5."));
+            Assert.AreEqual("X = 6.0" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- X is 2.25 + 3.75."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- 1 == 1.0."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- 1.0 == 1."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- 1 =:= 1.0."));
@@ -1438,13 +1439,13 @@ X = [a, man, loves];
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_number('7', 7.0)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_number('7.25', 7.0)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_number('7.25', 7)."));
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_number('7', X), integer(X)."));
-            Assert.AreEqual("X = 7.0\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_number('7.0', X), float(X)."));
-            Assert.AreEqual("X = 7.5\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_number('7.5', X), float(X)."));
+            Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_number('7', X), integer(X)."));
+            Assert.AreEqual("X = 7.0" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_number('7.0', X), float(X)."));
+            Assert.AreEqual("X = 7.5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_number('7.5', X), float(X)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_number(a, X)."));
-            Assert.AreEqual("X = 7\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_number(X, 7), atom(X)."));
-            Assert.AreEqual("X = 7.0\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_number(X, 7.0), atom(X)."));
-            Assert.AreEqual("X = 7.5\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_number(X, 7.5), atom(X)."));
+            Assert.AreEqual("X = 7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_number(X, 7), atom(X)."));
+            Assert.AreEqual("X = 7.0" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_number(X, 7.0), atom(X)."));
+            Assert.AreEqual("X = 7.5" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_number(X, 7.5), atom(X)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_number(X, Y)."));
         }
 
@@ -1456,21 +1457,21 @@ X = [a, man, loves];
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_concat(ab, cde, abfcde)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, 7, ab7)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, 7.0, 'ab7.0')."));
-            Assert.AreEqual("A3 = abcde\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, cde, A3)."));
-            Assert.AreEqual("A3 = ab7\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, 7, A3)."));
-            Assert.AreEqual("A3 = 7ab\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_concat(7, ab, A3)."));
-            Assert.AreEqual("A2 = cde\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, A2, abcde)."));
+            Assert.AreEqual("A3 = abcde" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, cde, A3)."));
+            Assert.AreEqual("A3 = ab7" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, 7, A3)."));
+            Assert.AreEqual("A3 = 7ab" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_concat(7, ab, A3)."));
+            Assert.AreEqual("A2 = cde" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_concat(ab, A2, abcde)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_concat(abf, A2, abcde)."));
-            Assert.AreEqual("A1 = ab\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_concat(A1, cde, abcde)."));
+            Assert.AreEqual("A1 = ab" + this.lineEnd + satisfied, globalInfo.ProcessInputString(" ?- atom_concat(A1, cde, abcde)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_concat(A1, fcde, abcde)."));
-            Assert.AreEqual("A1 = ab\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_concat(A1, '7', ab7)."));
+            Assert.AreEqual("A1 = ab" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_concat(A1, '7', ab7)."));
 
             globalInfo.FindAllSolutions();
-            Assert.AreEqual(@"A1 = a, A2 = bcde;
-A1 = ab, A2 = cde;
-A1 = abc, A2 = de;
-A1 = abcd, A2 = e;
-" + notSatisfied, globalInfo.ProcessInputString("?- atom_concat(A1, A2, abcde)."));
+            Assert.AreEqual(@"A1 = a, A2 = bcde;" + this.lineEnd +
+				"A1 = ab, A2 = cde;" + this.lineEnd +
+				"A1 = abc, A2 = de;" + this.lineEnd +
+				"A1 = abcd, A2 = e;" + this.lineEnd +
+				notSatisfied, globalInfo.ProcessInputString(" ?- atom_concat(A1, A2, abcde)."));
         }
 
         [Test]
@@ -1479,8 +1480,8 @@ A1 = abcd, A2 = e;
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- atom_length(abc, 3)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- atom_length(\"abc\", 3)."));   // atom_length works for strings too.
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- atom_length(\"\", 0)."));      // The empty string, not the functor '[]'.
-            Assert.AreEqual("L = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_length(abc, L)."));
-            Assert.AreEqual("L = 3\r\n" + satisfied, globalInfo.ProcessInputString("?- atom_length(\"abc\", L)."));
+            Assert.AreEqual("L = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_length(abc, L)."));
+            Assert.AreEqual("L = 3" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- atom_length(\"abc\", L)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- atom_length(A, L)."));
         }
 
@@ -1492,18 +1493,18 @@ A1 = abcd, A2 = e;
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- concat_atom([abc], abc)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, cde], abcde)."));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, cde, fg], abcdefg)."));
-            Assert.AreEqual("X = abc\r\n" + satisfied, globalInfo.ProcessInputString("?- concat_atom([abc], X)."));
-            Assert.AreEqual("X = abcde\r\n" + satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, cde], X)."));
-            Assert.AreEqual("X = abcdefg\r\n" + satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, cde, fg], X)."));
-            Assert.AreEqual("X = ab\r\n" + satisfied, globalInfo.ProcessInputString("?- concat_atom([X, cde], abcde)."));
-            Assert.AreEqual("X = cde\r\n" + satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, X], abcde)."));
+            Assert.AreEqual("X = abc" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- concat_atom([abc], X)."));
+            Assert.AreEqual("X = abcde" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, cde], X)."));
+            Assert.AreEqual("X = abcdefg" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, cde, fg], X)."));
+            Assert.AreEqual("X = ab" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- concat_atom([X, cde], abcde)."));
+            Assert.AreEqual("X = cde" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- concat_atom([ab, X], abcde)."));
 
             globalInfo.FindAllSolutions();
-            Assert.AreEqual(@"A1 = a, A2 = bcde;
-A1 = ab, A2 = cde;
-A1 = abc, A2 = de;
-A1 = abcd, A2 = e;
-" + notSatisfied, globalInfo.ProcessInputString("?- concat_atom([A1, A2], abcde)."));
+            Assert.AreEqual(@"A1 = a, A2 = bcde;" + lineEnd +
+				"A1 = ab, A2 = cde;" + lineEnd +
+				"A1 = abc, A2 = de;" + lineEnd +
+				"A1 = abcd, A2 = e;" + lineEnd +
+				notSatisfied, globalInfo.ProcessInputString(" ?- concat_atom([A1, A2], abcde)."));
         }
 
         [Test]
@@ -1513,10 +1514,10 @@ A1 = abcd, A2 = e;
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("foo(baz)."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("foo(bat)."));
 
-            Assert.AreEqual("Result = [bar, baz, bat]\r\n" + satisfied, globalInfo.ProcessInputString("?- findall(X, foo(X), Result)."));
+            Assert.AreEqual("Result = [bar, baz, bat]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- findall(X, foo(X), Result)."));
 
             // This query is satisfied, and returns the empty list (unlike bagof/3) :
-            Assert.AreEqual("Result = []\r\n" + satisfied, globalInfo.ProcessInputString("?- findall(X, blip(X), Result)."));
+            Assert.AreEqual("Result = []" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- findall(X, blip(X), Result)."));
         }
 
         [Test]
@@ -1530,19 +1531,19 @@ A1 = abcd, A2 = e;
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("descend(X, Y) :- child(X, Z), descend(Z, Y)."));
 
             globalInfo.FindAllSolutions();
-            Assert.AreEqual(@"Mother = caroline, List = [laura, rose];
-Mother = charlotte, List = [caroline, laura, rose];
-Mother = laura, List = [rose];
-Mother = martha, List = [charlotte, caroline, laura, rose];
-" + notSatisfied, globalInfo.ProcessInputString("?- bagof(Child, descend(Mother, Child), List)."));
+            Assert.AreEqual(@"Mother = caroline, List = [laura, rose];" + this.lineEnd +
+				"Mother = charlotte, List = [caroline, laura, rose];" + this.lineEnd +
+				"Mother = laura, List = [rose];" + this.lineEnd +
+				"Mother = martha, List = [charlotte, caroline, laura, rose];" + this.lineEnd +
+				notSatisfied, globalInfo.ProcessInputString(" ?- bagof(Child, descend(Mother, Child), List)."));
 
             globalInfo.FindFirstSolution();
-            Assert.AreEqual("List = [charlotte, caroline, laura, rose, caroline, laura, rose, laura, rose, rose]\r\n" + satisfied,
+            Assert.AreEqual("List = [charlotte, caroline, laura, rose, caroline, laura, rose, laura, rose, rose]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- bagof(Child, Mother ^ descend(Mother, Child), List)."));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("?- bagof(X, descend(mary, X), Z).")); // Instead of being satisfied and returning the empty list.
-            Assert.AreEqual("Z = [[laura, rose], [caroline, laura, rose], [rose], [charlotte, caroline, laura, rose]]\r\n" + satisfied,
+            Assert.AreEqual("Z = [[laura, rose], [caroline, laura, rose], [rose], [charlotte, caroline, laura, rose]]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- findall(List, bagof(Child, descend(Mother, Child), List), Z)."));
-            Assert.AreEqual("Z = [[laura, rose], [caroline, laura, rose], [rose], [charlotte, caroline, laura, rose]]\r\n" + satisfied,
+            Assert.AreEqual("Z = [[laura, rose], [caroline, laura, rose], [rose], [charlotte, caroline, laura, rose]]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- bagof(List, Child ^ Mother ^ bagof(Child, descend(Mother, Child), List), Z)."));
         }
 
@@ -1556,9 +1557,9 @@ Mother = martha, List = [charlotte, caroline, laura, rose];
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("age(dumbledore, 60)."));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("age(hagrid, 30)."));
 
-            Assert.AreEqual("Out = [draco, dumbledore, hagrid, harry, hermione, ron]\r\n" + satisfied,
+            Assert.AreEqual("Out = [draco, dumbledore, hagrid, harry, hermione, ron]" + this.lineEnd + satisfied,
                 globalInfo.ProcessInputString("?- setof(X, Y ^ age(X, Y), Out)."));
-            Assert.AreEqual("Out = [13, 14, 30, 60]\r\n" + satisfied, globalInfo.ProcessInputString("?- setof(Y, X ^ age(X, Y), Out)."));
+            Assert.AreEqual("Out = [13, 14, 30, 60]" + this.lineEnd + satisfied, globalInfo.ProcessInputString("?- setof(Y, X ^ age(X, Y), Out)."));
         }
 
         [Test]

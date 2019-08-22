@@ -12,7 +12,8 @@ namespace Inference.Tests.Interpreter.Prolog
     [TestFixture]
     public class Parser_Fixture
     {
-        private const string clauseAdded = PrologGlobalInfo.ClauseAdded;
+		private string lineEnd = System.Environment.NewLine;
+		private const string clauseAdded = PrologGlobalInfo.ClauseAdded;
         private const string satisfied = PrologGlobalInfo.Satisfied;
         private const string notSatisfied = PrologGlobalInfo.NotSatisfied;
         private readonly ITokenizer tokenizer;
@@ -79,7 +80,7 @@ namespace Inference.Tests.Interpreter.Prolog
         {
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("(infer? (plus 2 3 5))"));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("(infer? (plus 1 1 0))"));
-            Assert.AreEqual("X = 5\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (plus 2 3 X) (print X))"));
+            Assert.AreEqual("X = 5" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (plus 2 3 X) (print X))"));
         }
 
         [Test]
@@ -87,7 +88,7 @@ namespace Inference.Tests.Interpreter.Prolog
         {
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("(infer? (minus 12 3 9))"));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("(infer? (minus 8 13 21))"));
-            Assert.AreEqual("X = 9\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (minus 12 3 X) (print X))"));
+            Assert.AreEqual("X = 9" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (minus 12 3 X) (print X))"));
         }
 
         [Test]
@@ -142,8 +143,9 @@ namespace Inference.Tests.Interpreter.Prolog
                      (different B C) (different B E) (different C E) (different C D)
                      (different D E) (different E F))"));
 
-            Assert.IsTrue(globalInfo.ProcessInputString("(infer? (mapb-colouring A B C D E F) (print A B C D E F))").EndsWith("\r\n" + satisfied));
-        }
+            Assert.IsTrue(globalInfo.ProcessInputString("(infer? (mapb-colouring A B C D E F) (print A B C D E F))").EndsWith(lineEnd + satisfied));
+
+		}
 
         [Test]
         public void Map3ColouringTest2()     // The three-colour problem - From Kamin, page 353 - Using the not-equal predicate (see Exercise 9)
@@ -157,8 +159,9 @@ namespace Inference.Tests.Interpreter.Prolog
                      (not-equal B C) (not-equal B E) (not-equal C E) (not-equal C D)
                      (not-equal D E) (not-equal E F))"));
 
-            Assert.IsTrue(globalInfo.ProcessInputString("(infer? (mapb-colouring A B C D E F) (print A B C D E F))").EndsWith("\r\n" + satisfied));
-        }
+            Assert.IsTrue(globalInfo.ProcessInputString("(infer? (mapb-colouring A B C D E F) (print A B C D E F))").EndsWith(lineEnd + satisfied));
+
+		}
 
         [Test]
         public void AddToEndOfListTest()     // From Kamin, page 366
@@ -167,10 +170,10 @@ namespace Inference.Tests.Interpreter.Prolog
             globalInfo.LoadPreset("addtoend");
 
             // Forwards inference:
-            Assert.AreEqual("L = (cons 3 (cons 4 nil))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (addtoend (cons 3 nil) 4 L) (print L))"));
+            Assert.AreEqual("L = (cons 3 (cons 4 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (addtoend (cons 3 nil) 4 L) (print L))"));
 
             // Backwards inference:
-            Assert.AreEqual("L = (cons 3 nil)\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (addtoend L 4 (cons 3 (cons 4 nil))) (print L))"));
+            Assert.AreEqual("L = (cons 3 nil)" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (addtoend L 4 (cons 3 (cons 4 nil))) (print L))"));
         }
 
         [Test]
@@ -181,8 +184,8 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (reverse nil nil))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (reverse (cons X L) M) from (reverse L N) (addtoend N X M))"));
 
-            Assert.AreEqual("L = (cons 2 (cons 1 nil))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (reverse (cons 1 (cons 2 nil)) L) (print L))"));
-            Assert.AreEqual("L = (cons 2 (cons 1 nil))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (reverse L (cons 1 (cons 2 nil))) (print L))"));
+            Assert.AreEqual("L = (cons 2 (cons 1 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (reverse (cons 1 (cons 2 nil)) L) (print L))"));
+            Assert.AreEqual("L = (cons 2 (cons 1 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (reverse L (cons 1 (cons 2 nil))) (print L))"));
         }
 
         [Test]
@@ -191,13 +194,13 @@ namespace Inference.Tests.Interpreter.Prolog
             // (append L M N) means that N is the list obtained by appending M onto the end of L.
             globalInfo.LoadPreset("append");
 
-            Assert.AreEqual("L = nil\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (append nil nil L) (print L))"));
-            Assert.AreEqual("L = (cons 1 nil)\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (append (cons 1 nil) nil L) (print L))"));
-            Assert.AreEqual("L = (cons 1 nil)\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (append nil (cons 1 nil) L) (print L))"));
-            Assert.AreEqual("L = (cons 1 (cons 2 nil))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (append (cons 1 nil) (cons 2 nil) L) (print L))"));
-            Assert.AreEqual("L = (cons 3 (cons 4 (cons 5 (cons 6 nil))))\r\n" + satisfied,
+            Assert.AreEqual("L = nil" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (append nil nil L) (print L))"));
+            Assert.AreEqual("L = (cons 1 nil)" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (append (cons 1 nil) nil L) (print L))"));
+            Assert.AreEqual("L = (cons 1 nil)" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (append nil (cons 1 nil) L) (print L))"));
+            Assert.AreEqual("L = (cons 1 (cons 2 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (append (cons 1 nil) (cons 2 nil) L) (print L))"));
+            Assert.AreEqual("L = (cons 3 (cons 4 (cons 5 (cons 6 nil))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (append (cons 3 (cons 4 nil)) (cons 5 (cons 6 nil)) L) (print L))"));
-            Assert.AreEqual("L = (cons 5 nil)\r\n" + satisfied,
+            Assert.AreEqual("L = (cons 5 nil)" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (append L (cons 6 (cons 7 nil)) (cons 5 (cons 6 (cons 7 nil)))) (print L))"));
         }
 
@@ -208,10 +211,10 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (mult X Y Z) from (less 0 X) (minus X 1 V) (mult V Y W) (plus W Y Z))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (mult X Y Z) from (less X 0) (plus X 1 V) (mult V Y W) (minus W Y Z))"));
 
-            Assert.AreEqual("X = 12\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (mult 3 4 X) (print X))"));
-            Assert.AreEqual("X = -12\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (mult -3 4 X) (print X))"));
-            Assert.AreEqual("X = -12\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (mult 3 -4 X) (print X))"));
-            Assert.AreEqual("X = 12\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (mult -3 -4 X) (print X))"));
+            Assert.AreEqual("X = 12" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (mult 3 4 X) (print X))"));
+            Assert.AreEqual("X = -12" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (mult -3 4 X) (print X))"));
+            Assert.AreEqual("X = -12" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (mult 3 -4 X) (print X))"));
+            Assert.AreEqual("X = 12" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (mult -3 -4 X) (print X))"));
 
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("(infer? (mult X 4 12))"));
             Assert.AreEqual(notSatisfied, globalInfo.ProcessInputString("(infer? (mult 3 X 12))"));   // See page 369 for an explanation.
@@ -227,7 +230,7 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (fac 0 1))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (fac N R) from (minus N 1 N1) (fac N1 R1) (mult R1 N R))"));
 
-            Assert.AreEqual("X = 120\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (fac 5 X) (print X))"));
+            Assert.AreEqual("X = 120" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (fac 5 X) (print X))"));
         }
 
         [Test]
@@ -252,9 +255,9 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("(infer? (permutation (cons 4 (cons 2 (cons 3 nil))) (cons 2 (cons 3 (cons 4 nil)))))"));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("(infer? (ordered (cons 2 (cons 3 (cons 4 nil)))))"));
             // How do we get naive-sort to generate all possible permutations (or even more than one permutation)?  Via non-buggy backtracking (2012/12/03).
-            Assert.AreEqual("L = (cons 2 (cons 3 nil))\r\n" + satisfied,
+            Assert.AreEqual("L = (cons 2 (cons 3 nil))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (naive-sort (cons 3 (cons 2 nil)) L) (print L))"));
-            Assert.AreEqual("L = (cons 2 (cons 3 (cons 4 nil)))\r\n" + satisfied,
+            Assert.AreEqual("L = (cons 2 (cons 3 (cons 4 nil)))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (naive-sort (cons 4 (cons 2 (cons 3 nil))) L) (print L))"));
             Assert.AreEqual(satisfied, globalInfo.ProcessInputString("(infer? (naive-sort (cons 4 (cons 2 (cons 3 nil))) (cons 2 (cons 3 (cons 4 nil)))))"));
         }
@@ -278,10 +281,10 @@ namespace Inference.Tests.Interpreter.Prolog
         (quicksort B B1)
         (append A1 (cons H B1) S))"));
 
-            Assert.AreEqual("S = (cons 1 (cons 2 nil))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (quicksort (cons 2 (cons 1 nil)) S) (print S))"));
-            Assert.AreEqual("S = (cons 1 (cons 2 (cons 3 nil)))\r\n" + satisfied,
+            Assert.AreEqual("S = (cons 1 (cons 2 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (quicksort (cons 2 (cons 1 nil)) S) (print S))"));
+            Assert.AreEqual("S = (cons 1 (cons 2 (cons 3 nil)))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (quicksort (cons 2 (cons 3 (cons 1 nil))) S) (print S))"));
-            Assert.AreEqual("S = (cons 1 (cons 2 (cons 3 (cons 7 (cons 8 nil)))))\r\n" + satisfied,
+            Assert.AreEqual("S = (cons 1 (cons 2 (cons 3 (cons 7 (cons 8 nil)))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (quicksort (cons 8 (cons 2 (cons 3 (cons 7 (cons 1 nil))))) S) (print S))"));
         }
 
@@ -357,7 +360,7 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString(@"(infer (state1 (cons (on a b) (cons (on b table) (cons (on c a) nil)))))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString(@"(infer (state2 (cons (on a b) (cons (on b c) (cons (on c table) nil)))))"));
 
-            Assert.AreEqual("Plan = (cons (move c a table) (cons (move a b table) (cons (move b table c) (cons (move a table b) nil))))\r\n" + satisfied,
+            Assert.AreEqual("Plan = (cons (move c a table) (cons (move a b table) (cons (move b table c) (cons (move a table b) nil))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString(@"(infer? (state1 S1) (state2 S2) (transform S1 S2 Plan) (print Plan))"));
         }
 #endif
@@ -423,7 +426,7 @@ namespace Inference.Tests.Interpreter.Prolog
 
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString(@"(infer (state1 (cons (on a b) (cons (on b table) (cons (on c a) nil)))))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString(@"(infer (state2 (cons (on a b) (cons (on b c) (cons (on c table) nil)))))"));
-            Assert.AreEqual("Plan = (cons (move c a table) (cons (move a b table) (cons (move b table c) (cons (move a table b) nil))))\r\n" + satisfied,
+            Assert.AreEqual("Plan = (cons (move c a table) (cons (move a b table) (cons (move b table c) (cons (move a table b) nil))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString(@"(infer? (state1 S1) (state2 S2) (transform S1 S2 Plan) (print Plan))"));
         }
 
@@ -435,7 +438,7 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (length nil 0))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (length (cons X L) N) from (length L P) (plus P 1 N))"));
 
-            Assert.AreEqual("N = 4\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (length (cons 2 (cons 3 (cons 5 (cons 7 nil)))) N) (print N))"));
+            Assert.AreEqual("N = 4" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (length (cons 2 (cons 3 (cons 5 (cons 7 nil)))) N) (print N))"));
         }
 
         // (remove X L M) is satisfied iff the removal from list L of all elements matching X yields the list M.
@@ -447,9 +450,9 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (remove X (cons X L) M) from (remove X L M))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (remove X (cons Y L) (cons Y M)) from (remove X L M))"));
 
-            Assert.AreEqual("L = nil\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (remove 1 (cons 1 nil) L) (print L))"));
-            Assert.AreEqual("L = (cons 2 (cons 3 nil))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (remove 1 (cons 2 (cons 3 nil)) L) (print L))"));
-            Assert.AreEqual("L = (cons 2 (cons 3 (cons 4 nil)))\r\n" + satisfied,
+            Assert.AreEqual("L = nil" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (remove 1 (cons 1 nil) L) (print L))"));
+            Assert.AreEqual("L = (cons 2 (cons 3 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (remove 1 (cons 2 (cons 3 nil)) L) (print L))"));
+            Assert.AreEqual("L = (cons 2 (cons 3 (cons 4 nil)))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (remove 1 (cons 1 (cons 2 (cons 3 (cons 1 (cons 4 nil))))) L) (print L))"));
         }
 
@@ -464,9 +467,9 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (insert-sort nil nil))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (insert-sort (cons X L) M) from (insert-sort L N) (insert-into-sorted-list X N M))"));
 
-            Assert.AreEqual("S = (cons 1 (cons 2 (cons 3 (cons 7 (cons 8 nil)))))\r\n" + satisfied,
+            Assert.AreEqual("S = (cons 1 (cons 2 (cons 3 (cons 7 (cons 8 nil)))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (insert-sort (cons 8 (cons 2 (cons 3 (cons 7 (cons 1 nil))))) S) (print S))"));
-            Assert.AreEqual("S = (cons 1 (cons 3 (cons 3 (cons 7 (cons 8 nil)))))\r\n" + satisfied,
+            Assert.AreEqual("S = (cons 1 (cons 3 (cons 3 (cons 7 (cons 8 nil)))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (insert-sort (cons 8 (cons 3 (cons 1 (cons 7 (cons 3 nil))))) S) (print S))"));
         }
 
@@ -480,7 +483,7 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (flatten (cons nil L) M) from (flatten L M))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (flatten (cons X L) (cons X M)) from (flatten L M))"));
 
-            Assert.AreEqual("F = (cons 1 (cons 2 (cons 3 (cons 4 nil))))\r\n" + satisfied,
+            Assert.AreEqual("F = (cons 1 (cons 2 (cons 3 (cons 4 nil))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (flatten (cons (cons 1 (cons 2 (cons nil nil))) (cons (cons 3 nil) (cons 4 nil))) F) (print F))"));
         }
 
@@ -491,13 +494,13 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (simplify (diff X X) nil))"));
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (simplify (diff (cons X Y) Z) (cons X W)) from (simplify (diff Y Z) W))"));
 
-            Assert.AreEqual("L = (cons 3 (cons 4 nil))\r\n" + satisfied,
+            Assert.AreEqual("L = (cons 3 (cons 4 nil))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (simplify (diff (cons 3 (cons 4 X)) X) L) (print L))"));
 
             // diffappend
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (diffappend (diff L X) (diff X Y) (diff L Y)))"));
 
-            Assert.AreEqual("W = (cons 3 (cons 4 nil))\r\n" + satisfied,
+            Assert.AreEqual("W = (cons 3 (cons 4 nil))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (diffappend (diff (cons 3 X) X) (diff (cons 4 Y) Y) Z) (simplify Z W) (print W))"));
 
             // Exercise 6a) : diffaddtoend
@@ -506,7 +509,7 @@ namespace Inference.Tests.Interpreter.Prolog
     from
         (diffappend (diff L X) (diff (cons Y W) W) Z))"));
 
-            Assert.AreEqual("Z = (cons 1 (cons 2 (cons 3 (cons 4 nil))))\r\n" + satisfied,
+            Assert.AreEqual("Z = (cons 1 (cons 2 (cons 3 (cons 4 nil))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (simplify X (cons 1 (cons 2 (cons 3 nil)))) (diffaddtoend X 4 Y) (simplify Y Z) (print Z))"));
 
             // Exercise 6b) : diffreverse
@@ -517,7 +520,7 @@ namespace Inference.Tests.Interpreter.Prolog
         (diffreverse (diff L Y) W)
         (diffaddtoend W X Z))"));
 
-            Assert.AreEqual("Z = (cons 4 (cons 3 (cons 2 (cons 1 nil))))\r\n" + satisfied,
+            Assert.AreEqual("Z = (cons 4 (cons 3 (cons 2 (cons 1 nil))))" + lineEnd + satisfied,
                 globalInfo.ProcessInputString("(infer? (simplify X (cons 1 (cons 2 (cons 3 (cons 4 nil))))) (diffreverse X Y) (simplify Y Z) (print Z))"));
 
             // Exercise 6c) : diffquicksort
@@ -551,20 +554,20 @@ namespace Inference.Tests.Interpreter.Prolog
             Assert.IsTrue(globalInfo.ProcessInputString(@"
 (infer?
     (diffpartition 2 (diff (cons 2 (cons 1 X)) X) T V))").EndsWith(satisfied));
-            Assert.AreEqual("U = (cons 2 (cons 1 nil)), W = nil\r\n" + satisfied, globalInfo.ProcessInputString(@"
+            Assert.AreEqual("U = (cons 2 (cons 1 nil)), W = nil" + lineEnd + satisfied, globalInfo.ProcessInputString(@"
 (infer?
     (simplify S (cons 2 (cons 1 nil)))
     (diffpartition 2 S T V)
     (simplify T U)
     (simplify V W)
     (print U W))"));
-            Assert.AreEqual("U = (cons 1 (cons 2 nil))\r\n" + satisfied, globalInfo.ProcessInputString(@"
+            Assert.AreEqual("U = (cons 1 (cons 2 nil))" + lineEnd + satisfied, globalInfo.ProcessInputString(@"
 (infer?
     (simplify S (cons 2 (cons 1 nil)))
     (diffquicksort S T)
     (simplify T U)
     (print U))"));
-            Assert.AreEqual("U = (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil)))))\r\n" + satisfied, globalInfo.ProcessInputString(@"
+            Assert.AreEqual("U = (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil)))))" + lineEnd + satisfied, globalInfo.ProcessInputString(@"
 (infer?
     (simplify S (cons 3 (cons 5 (cons 2 (cons 1 (cons 4 nil))))))
     (diffquicksort S T)
@@ -584,9 +587,9 @@ namespace Inference.Tests.Interpreter.Prolog
         (minus M 1 N)
         (to-succ-format N X))"));
 
-            Assert.AreEqual("X = zero\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (to-succ-format 0 X) (print X))"));
-            Assert.AreEqual("X = (succ zero)\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (to-succ-format 1 X) (print X))"));
-            Assert.AreEqual("X = (succ (succ zero))\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (to-succ-format 2 X) (print X))"));
+            Assert.AreEqual("X = zero" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (to-succ-format 0 X) (print X))"));
+            Assert.AreEqual("X = (succ zero)" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (to-succ-format 1 X) (print X))"));
+            Assert.AreEqual("X = (succ (succ zero))" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (to-succ-format 2 X) (print X))"));
 
             // to-int
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (to-int zero 0))"));
@@ -596,16 +599,16 @@ namespace Inference.Tests.Interpreter.Prolog
         (to-int X M)
         (plus M 1 N))"));
 
-            Assert.AreEqual("X = 0\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (to-int zero X) (print X))"));
-            Assert.AreEqual("X = 1\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (to-int (succ zero) X) (print X))"));
-            Assert.AreEqual("X = 2\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (to-int (succ (succ zero)) X) (print X))"));
+            Assert.AreEqual("X = 0" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (to-int zero X) (print X))"));
+            Assert.AreEqual("X = 1" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (to-int (succ zero) X) (print X))"));
+            Assert.AreEqual("X = 2" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (to-int (succ (succ zero)) X) (print X))"));
 
             // print-int
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (print-int X) from (to-int X Y) (print Y))"));
 
-            Assert.AreEqual("Y = 0\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (print-int zero))"));
-            Assert.AreEqual("Y = 1\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (print-int (succ zero)))"));
-            Assert.AreEqual("Y = 2\r\n" + satisfied, globalInfo.ProcessInputString("(infer? (print-int (succ (succ zero))))"));
+            Assert.AreEqual("Y = 0" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (print-int zero))"));
+            Assert.AreEqual("Y = 1" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (print-int (succ zero)))"));
+            Assert.AreEqual("Y = 2" + lineEnd + satisfied, globalInfo.ProcessInputString("(infer? (print-int (succ (succ zero))))"));
 
             // equals
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (equals zero zero))"));
@@ -625,7 +628,7 @@ namespace Inference.Tests.Interpreter.Prolog
     (to-succ-format 2 X)
     (to-succ-format 3 Y)
     (+ X Y Z)
-    (print-int Z))").EndsWith(" = 5\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 5" + lineEnd + satisfied));
 
             // -
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (- zero X zero))"));
@@ -637,13 +640,13 @@ namespace Inference.Tests.Interpreter.Prolog
     (to-succ-format 5 X)
     (to-succ-format 2 Y)
     (- X Y Z)
-    (print-int Z))").EndsWith(" = 3\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 3" + lineEnd + satisfied));
             Assert.IsTrue(globalInfo.ProcessInputString(@"
 (infer?
     (to-succ-format 2 X)
     (to-succ-format 5 Y)
     (- X Y Z)
-    (print-int Z))").EndsWith(" = 0\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 0" + lineEnd + satisfied));
 
             // <
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (lessThan zero (succ X)))"));
@@ -658,7 +661,7 @@ namespace Inference.Tests.Interpreter.Prolog
     (to-succ-format 3 X)
     (to-succ-format 4 Y)
     (* X Y Z)
-    (print-int Z))").EndsWith(" = 12\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 12" + lineEnd + satisfied));
 
             // /
             Assert.AreEqual(clauseAdded, globalInfo.ProcessInputString("(infer (/ X Y zero) from (lessThan X Y))"));
@@ -669,19 +672,19 @@ namespace Inference.Tests.Interpreter.Prolog
     (to-succ-format 11 X)
     (to-succ-format 4 Y)
     (/ X Y Z)
-    (print-int Z))").EndsWith(" = 2\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 2" + lineEnd + satisfied));
             Assert.IsTrue(globalInfo.ProcessInputString(@"
 (infer?
     (to-succ-format 12 X)
     (to-succ-format 4 Y)
     (/ X Y Z)
-    (print-int Z))").EndsWith(" = 3\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 3" + lineEnd + satisfied));
             Assert.IsTrue(globalInfo.ProcessInputString(@"
 (infer?
     (to-succ-format 13 X)
     (to-succ-format 4 Y)
     (/ X Y Z)
-    (print-int Z))").EndsWith(" = 3\r\n" + satisfied));
+    (print-int Z))").EndsWith(" = 3" + lineEnd + satisfied));
         }
 
         [Test]
